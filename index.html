@@ -673,9 +673,52 @@
       }
 
       .filter-pill.active {
+        color: white;
+        font-weight: 700;
+      }
+
+      .filter-pill.active.all {
         background: var(--forest);
         border-color: var(--forest);
-        color: white;
+      }
+
+      .filter-pill.active.grassland {
+        background: #c4a035;
+        border-color: #8b6914;
+      }
+
+      .filter-pill.active.forest {
+        background: var(--forest-light);
+        border-color: var(--forest);
+      }
+
+      .filter-pill.active.jungle {
+        background: var(--forest);
+        border-color: #1e360f;
+      }
+
+      .filter-pill.active.ocean {
+        background: var(--ocean);
+        border-color: #134a5f;
+      }
+
+      .filter-pill.active.arctic {
+        background: #3a9ec4;
+        border-color: #1a5276;
+      }
+
+      .filter-pill.active.desert {
+        background: #c47835;
+        border-color: #a0522d;
+      }
+
+      .filter-pill.active.farm {
+        background: #8b6914;
+        border-color: #5c480d;
+      }
+
+      .filter-pill.active:hover {
+        filter: brightness(0.95);
       }
 
       .results-info {
@@ -4474,13 +4517,15 @@
       HABITATS.forEach((habitat) => {
         const btn = document.createElement("button");
         btn.type = "button";
-        btn.className =
-          "filter-pill" + (habitat === selectedHabitat ? " active" : "");
+        btn.className = `filter-pill ${habitatClass(habitat)}${
+          habitat === selectedHabitat ? " active" : ""
+        }`;
+        btn.dataset.habitat = habitat;
         btn.textContent = habitat;
         btn.addEventListener("click", () => {
           selectedHabitat = habitat;
           document.querySelectorAll(".filter-pill").forEach((pill) => {
-            pill.classList.toggle("active", pill.textContent === habitat);
+            pill.classList.toggle("active", pill.dataset.habitat === habitat);
           });
           renderGrid();
         });
