@@ -3944,6 +3944,8 @@
       let selectedHabitat = "All";
       let searchQuery = "";
       let reviewUnlocked = false;
+      let activeTranslateLang = "";
+      let translateSortTimer = null;
 
       const homeScreen = document.getElementById("home-screen");
       const detailScreen = document.getElementById("detail-screen");
@@ -4648,6 +4650,7 @@
           const card = document.createElement("button");
           card.type = "button";
           card.className = "animal-card";
+          card.dataset.animalId = animal.id;
           card.innerHTML = `
             <div class="card-emoji">${animal.emoji}</div>
             <p class="card-name">${animal.name}</p>
@@ -4657,6 +4660,10 @@
           card.addEventListener("click", () => showDetail(animal.id));
           animalGrid.appendChild(card);
         });
+
+        if (activeTranslateLang) {
+          scheduleTranslatedGridSort(activeTranslateLang);
+        }
       }
 
       function showDetail(id) {
@@ -4730,7 +4737,61 @@
         if (event.key === "Enter") unlockReview();
       });
 
+      function detectActiveTranslateLang() {
+        const match = document.cookie.match(/googtrans=\/en\/([^;]+)/);
+        return match ? decodeURIComponent(match[1]) : "";
+      }
+
+      function sortAnimalGridByVisibleNames(locale) {
+        if (!animalGrid || animalGrid.hidden) return;
+
+        const cards = Array.from(animalGrid.querySelectorAll(".animal-card"));
+        if (cards.length < 2) return;
+
+        cards.sort((a, b) => {
+          const nameA = a.querySelector(".card-name")?.textContent.trim() || "";
+          const nameB = b.querySelector(".card-name")?.textContent.trim() || "";
+          return nameA.localeCompare(nameB, locale, { sensitivity: "base", numeric: true });
+        });
+
+        cards.forEach((card) => animalGrid.appendChild(card));
+      }
+
+      function scheduleTranslatedGridSort(langCode) {
+        if (!langCode) {
+          activeTranslateLang = "";
+          if (translateSortTimer) {
+            clearInterval(translateSortTimer);
+            translateSortTimer = null;
+          }
+          return;
+        }
+
+        activeTranslateLang = langCode;
+
+        if (translateSortTimer) {
+          clearInterval(translateSortTimer);
+        }
+
+        let attempts = 0;
+        translateSortTimer = setInterval(() => {
+          attempts++;
+          sortAnimalGridByVisibleNames(langCode);
+
+          if (attempts >= 24) {
+            clearInterval(translateSortTimer);
+            translateSortTimer = null;
+          }
+        }, 250);
+      }
+
+      window.scheduleTranslatedGridSort = scheduleTranslatedGridSort;
+
+      activeTranslateLang = detectActiveTranslateLang();
       renderGrid();
+      if (activeTranslateLang) {
+        scheduleTranslatedGridSort(activeTranslateLang);
+      }
     </script>
     <script>
       const TRANSLATE_LANGUAGES = [
@@ -4801,6 +4862,10 @@
         document.querySelectorAll(".translate-option").forEach((button) => {
           button.classList.toggle("active", button.dataset.lang === langCode);
         });
+
+        if (window.scheduleTranslatedGridSort) {
+          window.scheduleTranslatedGridSort(langCode);
+        }
       }
 
       function initTranslateControls() {
