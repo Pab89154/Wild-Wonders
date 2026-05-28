@@ -533,7 +533,8 @@
       }
 
       .approve-btn,
-      .reject-btn {
+      .reject-btn,
+      .delete-btn {
         padding: 0.55rem 1rem;
         border-radius: 999px;
         font-family: inherit;
@@ -548,7 +549,8 @@
         color: white;
       }
 
-      .reject-btn {
+      .reject-btn,
+      .delete-btn {
         background: #fef2f2;
         color: #991b1b;
         border: 1px solid #fecaca;
@@ -1325,6 +1327,13 @@
               <div class="review-list" id="review-list"></div>
               <div class="empty-review" id="empty-review" hidden>
                 No animals waiting for review right now.
+              </div>
+
+              <h3 class="admin-section-title">Live user animals</h3>
+              <p class="results-info" id="approved-count"></p>
+              <div class="review-list" id="approved-list"></div>
+              <div class="empty-review" id="empty-approved" hidden>
+                No user-added animals on the site right now.
               </div>
 
               <h3 class="admin-section-title">User feedback</h3>
@@ -3971,6 +3980,9 @@
       const reviewList = document.getElementById("review-list");
       const reviewCount = document.getElementById("review-count");
       const emptyReview = document.getElementById("empty-review");
+      const approvedList = document.getElementById("approved-list");
+      const approvedCount = document.getElementById("approved-count");
+      const emptyApproved = document.getElementById("empty-approved");
       const feedbackList = document.getElementById("feedback-list");
       const feedbackCount = document.getElementById("feedback-count");
       const emptyFeedback = document.getElementById("empty-feedback");
@@ -4274,6 +4286,18 @@
         renderReviewList();
       }
 
+      function removeApprovedAnimal(animalId) {
+        const approved = loadApproved().filter((entry) => entry.id !== animalId);
+        saveApproved(approved);
+        renderReviewList();
+      }
+
+      function deleteFeedback(feedbackId) {
+        const feedback = loadFeedback().filter((entry) => entry.id !== feedbackId);
+        saveFeedback(feedback);
+        renderReviewList();
+      }
+
       function formatSubmittedAt(isoString) {
         try {
           return new Date(isoString).toLocaleString();
@@ -4365,13 +4389,14 @@
           <div class="review-facts">
             <p>${escapeHtml(entry.message)}</p>
           </div>
-          ${
-            showMarkRead
-              ? `<div class="review-actions">
-                  <button type="button" class="approve-btn" data-id="${entry.id}">Mark as read</button>
-                </div>`
-              : ""
-          }
+          <div class="review-actions">
+            ${
+              showMarkRead
+                ? `<button type="button" class="approve-btn" data-id="${entry.id}">Mark as read</button>`
+                : ""
+            }
+            <button type="button" class="delete-btn" data-id="${entry.id}">Delete</button>
+          </div>
         `;
 
         if (showMarkRead) {
@@ -4380,7 +4405,55 @@
           });
         }
 
+        item.querySelector(".delete-btn").addEventListener("click", () => {
+          deleteFeedback(entry.id);
+        });
+
         return item;
+      }
+
+      function renderApprovedList() {
+        const approved = loadApproved();
+        approvedList.innerHTML = "";
+        approvedCount.textContent = `${approved.length} user-added animal${
+          approved.length === 1 ? "" : "s"
+        } on the site`;
+
+        if (approved.length === 0) {
+          emptyApproved.hidden = false;
+          return;
+        }
+
+        emptyApproved.hidden = true;
+
+        approved.forEach((entry) => {
+          const item = document.createElement("article");
+          item.className = "review-item";
+          item.innerHTML = `
+            <div class="review-item-header">
+              <span class="review-item-emoji">${entry.emoji}</span>
+              <div>
+                <p class="review-item-name">${escapeHtml(entry.name)}</p>
+                <p class="review-meta">${escapeHtml(entry.type)} · ${escapeHtml(entry.habitat)}${
+                  entry.author ? ` · by ${escapeHtml(entry.author)}` : ""
+                }</p>
+              </div>
+            </div>
+            <div class="review-facts">
+              <p><strong>Fun fact:</strong> ${escapeHtml(entry.funFact)}</p>
+              <p><strong>Did you know?:</strong> ${escapeHtml(entry.extraFact)}</p>
+            </div>
+            <div class="review-actions">
+              <button type="button" class="reject-btn" data-id="${entry.id}">Remove from site</button>
+            </div>
+          `;
+
+          item.querySelector(".reject-btn").addEventListener("click", () => {
+            removeApprovedAnimal(entry.id);
+          });
+
+          approvedList.appendChild(item);
+        });
       }
 
       function renderFeedbackList() {
@@ -4498,6 +4571,7 @@
           });
         }
 
+        renderApprovedList();
         renderFeedbackList();
       }
 
