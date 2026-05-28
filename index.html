@@ -220,7 +220,8 @@
         transform: scale(0.98);
       }
 
-      .add-animal-btn {
+      .add-animal-btn,
+      .feedback-btn {
         align-self: flex-start;
         padding: 0.55rem 0.85rem;
         background: var(--surface);
@@ -237,7 +238,8 @@
         box-shadow: var(--shadow);
       }
 
-      .add-animal-btn:hover {
+      .add-animal-btn:hover,
+      .feedback-btn:hover {
         background: rgba(74, 124, 46, 0.08);
         transform: translateY(-1px);
       }
@@ -592,6 +594,11 @@
 
       .admin-section-title:first-of-type {
         margin-top: 0;
+      }
+
+      .review-item.read-item {
+        opacity: 0.88;
+        border-style: dashed;
       }
 
       .password-hint {
@@ -1006,6 +1013,9 @@
               <button type="button" class="add-animal-btn" id="add-animal-btn">
                 ➕ Add Animal
               </button>
+              <button type="button" class="feedback-btn" id="feedback-toolbar-btn">
+                💬 Feedback
+              </button>
               <div class="translate-wrap" id="translate-wrap">
                 <button type="button" class="random-btn" id="random-btn">
                   🎲 Surprise Me!
@@ -1278,7 +1288,14 @@
               <p class="results-info" id="feedback-count"></p>
               <div class="review-list" id="feedback-list"></div>
               <div class="empty-review" id="empty-feedback" hidden>
-                No feedback yet.
+                No new feedback right now.
+              </div>
+
+              <h3 class="admin-section-title">Read</h3>
+              <p class="results-info" id="feedback-read-count"></p>
+              <div class="review-list" id="feedback-read-list"></div>
+              <div class="empty-review" id="empty-read-feedback" hidden>
+                No read feedback yet.
               </div>
             </div>
           </div>
@@ -3914,6 +3931,9 @@
       const feedbackList = document.getElementById("feedback-list");
       const feedbackCount = document.getElementById("feedback-count");
       const emptyFeedback = document.getElementById("empty-feedback");
+      const feedbackReadList = document.getElementById("feedback-read-list");
+      const feedbackReadCount = document.getElementById("feedback-read-count");
+      const emptyReadFeedback = document.getElementById("empty-read-feedback");
 
       let memoryPending = null;
       let memoryApproved = null;
@@ -4273,10 +4293,78 @@
         window.location.href = mailtoUrl;
       }
 
-      function dismissFeedback(feedbackId) {
-        const feedback = loadFeedback().filter((entry) => entry.id !== feedbackId);
+      function markFeedbackAsRead(feedbackId) {
+        const feedback = loadFeedback().map((entry) => {
+          if (entry.id !== feedbackId) return entry;
+          return {
+            ...entry,
+            read: true,
+            readAt: new Date().toISOString(),
+          };
+        });
         saveFeedback(feedback);
         renderReviewList();
+      }
+
+      function buildFeedbackItem(entry, { showMarkRead }) {
+        const item = document.createElement("article");
+        item.className = "review-item" + (entry.read ? " read-item" : "");
+        item.innerHTML = `
+          <div class="review-item-header">
+            <span class="review-item-emoji">💬</span>
+            <div>
+              <p class="review-item-name">${escapeHtml(entry.name || "Anonymous")}</p>
+              <p class="review-meta">${formatSubmittedAt(entry.submittedAt)}${
+                entry.readAt ? ` · Read ${formatSubmittedAt(entry.readAt)}` : ""
+              }</p>
+            </div>
+          </div>
+          <div class="review-facts">
+            <p>${escapeHtml(entry.message)}</p>
+          </div>
+          ${
+            showMarkRead
+              ? `<div class="review-actions">
+                  <button type="button" class="approve-btn" data-id="${entry.id}">Mark as read</button>
+                </div>`
+              : ""
+          }
+        `;
+
+        if (showMarkRead) {
+          item.querySelector(".approve-btn").addEventListener("click", () => {
+            markFeedbackAsRead(entry.id);
+          });
+        }
+
+        return item;
+      }
+
+      function renderFeedbackList() {
+        const allFeedback = loadFeedback();
+        const unreadFeedback = allFeedback.filter((entry) => !entry.read);
+        const readFeedback = allFeedback.filter((entry) => entry.read);
+
+        feedbackList.innerHTML = "";
+        feedbackReadList.innerHTML = "";
+
+        feedbackCount.textContent = `${unreadFeedback.length} new feedback message${
+          unreadFeedback.length === 1 ? "" : "s"
+        }`;
+        feedbackReadCount.textContent = `${readFeedback.length} read message${
+          readFeedback.length === 1 ? "" : "s"
+        }`;
+
+        emptyFeedback.hidden = unreadFeedback.length > 0;
+        emptyReadFeedback.hidden = readFeedback.length > 0;
+
+        unreadFeedback.forEach((entry) => {
+          feedbackList.appendChild(buildFeedbackItem(entry, { showMarkRead: true }));
+        });
+
+        readFeedback.forEach((entry) => {
+          feedbackReadList.appendChild(buildFeedbackItem(entry, { showMarkRead: false }));
+        });
       }
 
       function handleFeedbackSubmit(event) {
@@ -4307,47 +4395,6 @@
           console.error(error);
           showFeedbackErrors(["Something went wrong while sending your feedback. Please try again."]);
         }
-      }
-
-      function renderFeedbackList() {
-        const feedback = loadFeedback().filter((entry) => !entry.read);
-        feedbackList.innerHTML = "";
-        feedbackCount.textContent = `${feedback.length} feedback message${
-          feedback.length === 1 ? "" : "s"
-        }`;
-
-        if (feedback.length === 0) {
-          emptyFeedback.hidden = false;
-          return;
-        }
-
-        emptyFeedback.hidden = true;
-
-        feedback.forEach((entry) => {
-          const item = document.createElement("article");
-          item.className = "review-item";
-          item.innerHTML = `
-            <div class="review-item-header">
-              <span class="review-item-emoji">💬</span>
-              <div>
-                <p class="review-item-name">${escapeHtml(entry.name || "Anonymous")}</p>
-                <p class="review-meta">${formatSubmittedAt(entry.submittedAt)}</p>
-              </div>
-            </div>
-            <div class="review-facts">
-              <p>${escapeHtml(entry.message)}</p>
-            </div>
-            <div class="review-actions">
-              <button type="button" class="approve-btn" data-id="${entry.id}">Mark as read</button>
-            </div>
-          `;
-
-          item.querySelector(".approve-btn").addEventListener("click", () => {
-            dismissFeedback(entry.id);
-          });
-
-          feedbackList.appendChild(item);
-        });
       }
 
       function renderReviewList() {
@@ -4553,6 +4600,7 @@
       addAnimalForm.addEventListener("submit", handleAddSubmit);
       successHomeBtn.addEventListener("click", showHome);
       feedbackLink.addEventListener("click", showFeedbackForm);
+      document.getElementById("feedback-toolbar-btn").addEventListener("click", showFeedbackForm);
       feedbackBackBtn.addEventListener("click", showHome);
       feedbackCancelBtn.addEventListener("click", showHome);
       feedbackForm.addEventListener("submit", handleFeedbackSubmit);
