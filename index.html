@@ -40,6 +40,7 @@
         color: var(--text);
         min-height: 100vh;
         line-height: 1.6;
+        top: 0 !important;
       }
 
       .app {
@@ -57,7 +58,7 @@
       }
 
       .header {
-        margin-bottom: 0.65rem;
+        margin-bottom: 0.4rem;
       }
 
       .header-top {
@@ -121,19 +122,19 @@
       .toolbar {
         display: flex;
         flex-direction: column;
-        gap: 0.6rem;
-        margin-bottom: 0.75rem;
+        gap: 0.45rem;
+        margin-bottom: 0.5rem;
         background: rgba(255, 255, 255, 0.72);
         border: 2px solid rgba(45, 80, 22, 0.1);
         border-radius: var(--radius);
-        padding: 0.75rem 0.85rem;
+        padding: 0.55rem 0.7rem;
         box-shadow: var(--shadow);
       }
 
       .filter-row {
         display: flex;
         align-items: center;
-        gap: 0.65rem;
+        gap: 0.5rem;
         flex-wrap: wrap;
       }
 
@@ -146,52 +147,65 @@
 
       .search-row {
         display: flex;
-        gap: 0.65rem;
+        gap: 0.5rem;
         flex-wrap: wrap;
-        align-items: stretch;
+        align-items: flex-start;
       }
 
       .search-wrap {
-        flex: 1 1 220px;
-        min-width: 180px;
-        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        flex: 1 1 200px;
+        min-width: 160px;
+        padding: 0 0.75rem;
+        background: var(--surface);
+        border: 2px solid rgba(45, 80, 22, 0.2);
+        border-radius: var(--radius);
+        transition: border-color 0.2s;
       }
 
-      .search-wrap span {
-        position: absolute;
-        left: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 1.1rem;
+      .search-wrap:focus-within {
+        border-color: var(--forest-light);
+      }
+
+      .search-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        line-height: 1;
+        flex-shrink: 0;
         pointer-events: none;
       }
 
       .search-input {
         width: 100%;
-        padding: 0.75rem 1rem 0.75rem 2.75rem;
-        border: 2px solid rgba(45, 80, 22, 0.2);
-        border-radius: var(--radius);
+        flex: 1;
+        min-width: 0;
+        padding: 0.6rem 0;
+        border: none;
+        border-radius: 0;
         font-family: inherit;
-        font-size: 1rem;
-        background: var(--surface);
+        font-size: 0.95rem;
+        background: transparent;
         color: var(--text);
-        transition: border-color 0.2s;
       }
 
       .search-input:focus {
         outline: none;
-        border-color: var(--forest-light);
       }
 
       .random-btn {
-        padding: 0.65rem 1rem;
+        padding: 0.55rem 0.85rem;
         background: linear-gradient(135deg, var(--forest-light), var(--forest));
         color: white;
-        border: none;
+        border: 2px solid transparent;
         border-radius: var(--radius);
         font-family: inherit;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         font-weight: 600;
+        line-height: 1.25;
         cursor: pointer;
         white-space: nowrap;
         transition: transform 0.15s, box-shadow 0.15s;
@@ -207,14 +221,16 @@
       }
 
       .add-animal-btn {
-        padding: 0.65rem 1rem;
+        align-self: flex-start;
+        padding: 0.55rem 0.85rem;
         background: var(--surface);
         color: var(--forest);
         border: 2px solid rgba(45, 80, 22, 0.25);
         border-radius: var(--radius);
         font-family: inherit;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         font-weight: 600;
+        line-height: 1.25;
         cursor: pointer;
         white-space: nowrap;
         transition: transform 0.15s, background 0.15s;
@@ -224,6 +240,107 @@
       .add-animal-btn:hover {
         background: rgba(74, 124, 46, 0.08);
         transform: translateY(-1px);
+      }
+
+      .translate-wrap {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        flex: 0 0 auto;
+        align-self: flex-start;
+      }
+
+      .translate-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        padding: 0.55rem 0.85rem;
+        border-radius: var(--radius);
+        border: 2px solid rgba(45, 80, 22, 0.2);
+        background: var(--surface);
+        color: var(--forest);
+        font-size: 0.85rem;
+        font-weight: 600;
+        line-height: 1.25;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+        transition: transform 0.15s, background 0.15s;
+        white-space: nowrap;
+      }
+
+      .translate-btn-emoji {
+        font-size: 1.15rem;
+        line-height: 1;
+      }
+
+      .translate-btn:hover {
+        background: rgba(74, 124, 46, 0.08);
+        transform: translateY(-1px);
+      }
+
+      .translate-menu {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        min-width: 180px;
+        background: var(--surface);
+        border: 2px solid rgba(45, 80, 22, 0.12);
+        border-radius: var(--radius);
+        padding: 0.65rem;
+        box-shadow: var(--shadow);
+        z-index: 20;
+      }
+
+      .translate-menu-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+        padding: 0 0.35rem;
+      }
+
+      .translate-option {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 0.55rem 0.65rem;
+        border: none;
+        border-radius: calc(var(--radius) - 6px);
+        background: transparent;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 0.95rem;
+        cursor: pointer;
+      }
+
+      .translate-option:hover,
+      .translate-option.active {
+        background: rgba(74, 124, 46, 0.1);
+        color: var(--forest);
+      }
+
+      .google-translate-host {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+      }
+
+      .goog-te-banner-frame.skiptranslate,
+      #goog-gt-tt,
+      .goog-te-balloon-frame {
+        display: none !important;
+      }
+
+      .skiptranslate iframe {
+        visibility: hidden !important;
+        height: 0 !important;
       }
 
       .form-card {
@@ -456,7 +573,25 @@
         font-size: 0.85rem;
         cursor: pointer;
         text-decoration: underline;
-        margin-top: 0.35rem;
+      }
+
+      .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem 1.25rem;
+        justify-content: center;
+        margin-top: 0.5rem;
+      }
+
+      .admin-section-title {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--forest);
+        margin: 1.5rem 0 0.75rem;
+      }
+
+      .admin-section-title:first-of-type {
+        margin-top: 0;
       }
 
       .password-hint {
@@ -516,10 +651,10 @@
         background: var(--surface);
         border: 2px solid rgba(45, 80, 22, 0.15);
         color: var(--text);
-        padding: 0.4rem 0.85rem;
+        padding: 0.3rem 0.7rem;
         border-radius: 999px;
         font-family: inherit;
-        font-size: 0.875rem;
+        font-size: 0.8rem;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.15s;
@@ -859,7 +994,7 @@
           <div class="toolbar">
             <div class="search-row">
               <div class="search-wrap">
-                <span>🔍</span>
+                <span class="search-icon" aria-hidden="true">🔍</span>
                 <input
                   type="search"
                   id="search-input"
@@ -871,9 +1006,34 @@
               <button type="button" class="add-animal-btn" id="add-animal-btn">
                 ➕ Add Animal
               </button>
-              <button type="button" class="random-btn" id="random-btn">
-                🎲 Surprise Me!
-              </button>
+              <div class="translate-wrap" id="translate-wrap">
+                <button type="button" class="random-btn" id="random-btn">
+                  🎲 Surprise Me!
+                </button>
+                <button
+                  type="button"
+                  class="translate-btn"
+                  id="translate-btn"
+                  aria-label="Translate website"
+                  title="Translate website"
+                >
+                  <span class="translate-btn-emoji" aria-hidden="true">🌐</span>
+                  Translate
+                </button>
+                <div class="translate-menu" id="translate-menu" hidden>
+                  <p class="translate-menu-title">Translate site</p>
+                  <button type="button" class="translate-option active" data-lang="">English</button>
+                  <button type="button" class="translate-option" data-lang="es">Español</button>
+                  <button type="button" class="translate-option" data-lang="fr">Français</button>
+                  <button type="button" class="translate-option" data-lang="de">Deutsch</button>
+                  <button type="button" class="translate-option" data-lang="pt">Português</button>
+                  <button type="button" class="translate-option" data-lang="zh-CN">中文</button>
+                  <button type="button" class="translate-option" data-lang="ja">日本語</button>
+                  <button type="button" class="translate-option" data-lang="ko">한국어</button>
+                  <button type="button" class="translate-option" data-lang="ar">العربية</button>
+                  <button type="button" class="translate-option" data-lang="hi">हिन्दी</button>
+                </div>
+              </div>
             </div>
 
             <div class="filter-row">
@@ -938,7 +1098,7 @@
             <h2 class="form-title">Add Your Animal</h2>
             <p class="form-intro">
               Share a real animal with fun facts! We'll do a quick check first,
-              then a grown-up will make sure it's appropriate, true, and really
+              then an admin will make sure it's appropriate, true, and really
               about animals before it goes live.
             </p>
 
@@ -1031,7 +1191,7 @@
             <h2>Thanks for sharing!</h2>
             <p id="success-message">
               Thanks for sharing! Your animal passed our quick checks and was
-              sent to a grown-up. They will make sure the facts are true before
+              sent for admin review. An admin will make sure the facts are true before
               it appears in the encyclopedia.
             </p>
             <button type="button" class="submit-btn" id="success-home-btn">
@@ -1040,7 +1200,46 @@
           </div>
         </section>
 
-        <!-- REVIEW SCREEN (for grown-ups) -->
+        <!-- FEEDBACK SCREEN -->
+        <section id="feedback-screen" class="screen">
+          <button type="button" class="back-btn" id="feedback-back-btn">
+            ← Back to all animals
+          </button>
+
+          <div class="form-card">
+            <h2 class="form-title">Send Feedback</h2>
+            <p class="form-intro">
+              Tell us what you think about Wild Wonders! Your ideas help make the
+              site better.
+            </p>
+
+            <form id="feedback-form" class="form-grid" novalidate>
+              <div class="form-field">
+                <label for="feedback-name">Your first name (optional)</label>
+                <input id="feedback-name" name="name" maxlength="30" placeholder="Alex" />
+              </div>
+
+              <div class="form-field">
+                <label for="feedback-message">Your feedback</label>
+                <textarea
+                  id="feedback-message"
+                  name="message"
+                  maxlength="500"
+                  placeholder="What do you like? What could be better?"
+                ></textarea>
+              </div>
+
+              <div id="feedback-form-error-box" class="form-error" hidden></div>
+
+              <div class="form-actions">
+                <button type="submit" class="submit-btn">Send feedback</button>
+                <button type="button" class="cancel-btn" id="feedback-cancel-btn">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- REVIEW SCREEN (Admin) -->
         <section id="review-screen" class="screen">
           <button type="button" class="back-btn" id="review-back-btn">
             ← Back to all animals
@@ -1055,23 +1254,31 @@
 
             <div id="pin-panel" class="pin-panel">
               <div class="form-field">
-                <label for="review-pin">Grown-up password</label>
+                <label for="review-pin">Admin password</label>
                 <input id="review-pin" type="password" placeholder="Enter password" />
               </div>
               <button type="button" class="submit-btn" id="review-unlock-btn" style="width: 100%; margin-top: 0.75rem">
                 Unlock review
               </button>
               <p class="form-intro" style="margin-top: 0.75rem; font-size: 0.82rem">
-                Type the password normally — use the backwards hint in the footer if
-                you need help.
+                Enter the admin password to unlock review.
               </p>
             </div>
 
             <div id="review-panel" hidden>
               <p class="results-info" id="review-count"></p>
+
+              <h3 class="admin-section-title">Animal submissions</h3>
               <div class="review-list" id="review-list"></div>
               <div class="empty-review" id="empty-review" hidden>
                 No animals waiting for review right now.
+              </div>
+
+              <h3 class="admin-section-title">User feedback</h3>
+              <p class="results-info" id="feedback-count"></p>
+              <div class="review-list" id="feedback-list"></div>
+              <div class="empty-review" id="empty-feedback" hidden>
+                No feedback yet.
               </div>
             </div>
           </div>
@@ -1079,13 +1286,18 @@
 
         <footer class="footer">
           Made with 🌿 for curious kids everywhere
-          <br />
-          <button type="button" class="footer-link" id="review-link">
-            Review submissions (grown-ups)
-          </button>
-          <p class="password-hint">(password: sredniwldiw) Password backwards</p>
+          <div class="footer-links">
+            <button type="button" class="footer-link" id="feedback-link">
+              💬 Send feedback
+            </button>
+            <button type="button" class="footer-link" id="review-link">
+              Review submissions (Admin)
+            </button>
+          </div>
         </footer>
       </div>
+
+      <div id="google_translate_element" class="google-translate-host"></div>
     </div>
 
     <script>
@@ -3590,6 +3802,8 @@
       const BASE_ANIMALS = ANIMALS;
       const STORAGE_PENDING = "wildWonders_pending";
       const STORAGE_APPROVED = "wildWonders_approved";
+      const STORAGE_FEEDBACK = "wildWonders_feedback";
+      const FEEDBACK_EMAIL = "pmolinasamayoa@icloud.com";
       const REVIEW_PIN = "wildwonders";
       const ANIMAL_TYPES = [
         "Mammal",
@@ -3666,6 +3880,7 @@
       const detailScreen = document.getElementById("detail-screen");
       const addScreen = document.getElementById("add-screen");
       const successScreen = document.getElementById("success-screen");
+      const feedbackScreen = document.getElementById("feedback-screen");
       const reviewScreen = document.getElementById("review-screen");
       const animalCountEl = document.getElementById("animal-count");
       const searchInput = document.getElementById("search-input");
@@ -3682,6 +3897,11 @@
       const successMessageEl = document.getElementById("success-message");
       const formErrorBox = document.getElementById("form-error-box");
       const successHomeBtn = document.getElementById("success-home-btn");
+      const feedbackLink = document.getElementById("feedback-link");
+      const feedbackBackBtn = document.getElementById("feedback-back-btn");
+      const feedbackCancelBtn = document.getElementById("feedback-cancel-btn");
+      const feedbackForm = document.getElementById("feedback-form");
+      const feedbackFormErrorBox = document.getElementById("feedback-form-error-box");
       const reviewLink = document.getElementById("review-link");
       const reviewBackBtn = document.getElementById("review-back-btn");
       const reviewUnlockBtn = document.getElementById("review-unlock-btn");
@@ -3691,9 +3911,13 @@
       const reviewList = document.getElementById("review-list");
       const reviewCount = document.getElementById("review-count");
       const emptyReview = document.getElementById("empty-review");
+      const feedbackList = document.getElementById("feedback-list");
+      const feedbackCount = document.getElementById("feedback-count");
+      const emptyFeedback = document.getElementById("empty-feedback");
 
       let memoryPending = null;
       let memoryApproved = null;
+      let memoryFeedback = null;
       let storageWarningShown = false;
 
       function loadPending() {
@@ -3737,6 +3961,24 @@
         renderGrid();
       }
 
+      function loadFeedback() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_FEEDBACK) || "[]");
+        } catch {
+          return memoryFeedback ? [...memoryFeedback] : [];
+        }
+      }
+
+      function saveFeedback(list) {
+        try {
+          localStorage.setItem(STORAGE_FEEDBACK, JSON.stringify(list));
+          memoryFeedback = null;
+        } catch {
+          memoryFeedback = [...list];
+        }
+        updateReviewLinkLabel();
+      }
+
       function getAllAnimals() {
         return [...BASE_ANIMALS, ...loadApproved()];
       }
@@ -3767,10 +4009,13 @@
 
       function updateReviewLinkLabel() {
         const pendingCount = loadPending().length;
+        const feedbackWaiting = loadFeedback().filter((entry) => !entry.read).length;
+        const totalWaiting = pendingCount + feedbackWaiting;
+
         reviewLink.textContent =
-          pendingCount > 0
-            ? `Review submissions (${pendingCount} waiting)`
-            : "Review submissions (grown-ups)";
+          totalWaiting > 0
+            ? `Review submissions (${totalWaiting} waiting)`
+            : "Review submissions (Admin)";
       }
 
       function hasEmoji(text) {
@@ -3928,6 +4173,8 @@
 
           queueForManualReview(data);
           addAnimalForm.reset();
+          successMessageEl.textContent =
+            "Thanks for sharing! Your animal passed our quick checks and was sent for admin review. An admin will make sure the facts are true before it appears in the encyclopedia.";
           showScreen(successScreen);
         } catch (error) {
           console.error(error);
@@ -3964,6 +4211,145 @@
         renderReviewList();
       }
 
+      function formatSubmittedAt(isoString) {
+        try {
+          return new Date(isoString).toLocaleString();
+        } catch {
+          return "Recently";
+        }
+      }
+
+      function clearFeedbackErrors() {
+        feedbackFormErrorBox.hidden = true;
+        feedbackFormErrorBox.innerHTML = "";
+      }
+
+      function showFeedbackErrors(errors) {
+        feedbackFormErrorBox.hidden = false;
+        feedbackFormErrorBox.innerHTML = `<strong>Please fix these before sending:</strong><ul>${errors
+          .map((error) => `<li>${escapeHtml(error)}</li>`)
+          .join("")}</ul>`;
+        feedbackFormErrorBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      function getFeedbackFormData() {
+        return {
+          name: document.getElementById("feedback-name").value.trim(),
+          message: document.getElementById("feedback-message").value.trim(),
+        };
+      }
+
+      function validateFeedback(data) {
+        const errors = [];
+        if (!data.message || data.message.length < 8) {
+          errors.push("Please write a bit more feedback (at least 8 letters).");
+        }
+        if (/https?:\/\//i.test(data.message) || /www\./i.test(data.message)) {
+          errors.push("Please do not include website links.");
+        }
+        return errors;
+      }
+
+      function queueFeedback(data) {
+        const entry = {
+          id: `feedback-${Date.now()}`,
+          name: data.name,
+          message: data.message,
+          submittedAt: new Date().toISOString(),
+          read: false,
+        };
+
+        const feedback = loadFeedback();
+        feedback.unshift(entry);
+        saveFeedback(feedback);
+        return entry;
+      }
+
+      function sendFeedbackEmail(data) {
+        const sender = data.name ? `${data.name} wrote:` : "A visitor wrote:";
+        const body = `${sender}\n\n${data.message}`;
+        const subject = "Wild Wonders feedback";
+        const mailtoUrl = `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        window.location.href = mailtoUrl;
+      }
+
+      function dismissFeedback(feedbackId) {
+        const feedback = loadFeedback().filter((entry) => entry.id !== feedbackId);
+        saveFeedback(feedback);
+        renderReviewList();
+      }
+
+      function handleFeedbackSubmit(event) {
+        event.preventDefault();
+        clearFeedbackErrors();
+
+        try {
+          const data = getFeedbackFormData();
+          const errors = validateFeedback(data);
+          if (errors.length > 0) {
+            showFeedbackErrors(errors);
+            return;
+          }
+
+          queueFeedback(data);
+          feedbackForm.reset();
+
+          try {
+            sendFeedbackEmail(data);
+          } catch {
+            // Email app may be unavailable; feedback is still saved for Admin review.
+          }
+
+          successMessageEl.textContent =
+            "Thanks for your feedback! We really appreciate your ideas.";
+          showScreen(successScreen);
+        } catch (error) {
+          console.error(error);
+          showFeedbackErrors(["Something went wrong while sending your feedback. Please try again."]);
+        }
+      }
+
+      function renderFeedbackList() {
+        const feedback = loadFeedback().filter((entry) => !entry.read);
+        feedbackList.innerHTML = "";
+        feedbackCount.textContent = `${feedback.length} feedback message${
+          feedback.length === 1 ? "" : "s"
+        }`;
+
+        if (feedback.length === 0) {
+          emptyFeedback.hidden = false;
+          return;
+        }
+
+        emptyFeedback.hidden = true;
+
+        feedback.forEach((entry) => {
+          const item = document.createElement("article");
+          item.className = "review-item";
+          item.innerHTML = `
+            <div class="review-item-header">
+              <span class="review-item-emoji">💬</span>
+              <div>
+                <p class="review-item-name">${escapeHtml(entry.name || "Anonymous")}</p>
+                <p class="review-meta">${formatSubmittedAt(entry.submittedAt)}</p>
+              </div>
+            </div>
+            <div class="review-facts">
+              <p>${escapeHtml(entry.message)}</p>
+            </div>
+            <div class="review-actions">
+              <button type="button" class="approve-btn" data-id="${entry.id}">Mark as read</button>
+            </div>
+          `;
+
+          item.querySelector(".approve-btn").addEventListener("click", () => {
+            dismissFeedback(entry.id);
+          });
+
+          feedbackList.appendChild(item);
+        });
+      }
+
       function renderReviewList() {
         const pending = loadPending();
         reviewList.innerHTML = "";
@@ -3976,21 +4362,19 @@
 
         pinPanel.hidden = true;
         reviewPanel.hidden = false;
-        reviewCount.textContent = `${pending.length} submission${
+        reviewCount.textContent = `${pending.length} animal submission${
           pending.length === 1 ? "" : "s"
         } waiting`;
 
         if (pending.length === 0) {
           emptyReview.hidden = false;
-          return;
-        }
+        } else {
+          emptyReview.hidden = true;
 
-        emptyReview.hidden = true;
-
-        pending.forEach((entry) => {
-          const item = document.createElement("article");
-          item.className = "review-item";
-          item.innerHTML = `
+          pending.forEach((entry) => {
+            const item = document.createElement("article");
+            item.className = "review-item";
+            item.innerHTML = `
             <div class="review-item-header">
               <span class="review-item-emoji">${entry.emoji}</span>
               <div>
@@ -4013,15 +4397,18 @@
             </div>
           `;
 
-          item.querySelector(".approve-btn").addEventListener("click", () => {
-            approveSubmission(entry.id);
-          });
-          item.querySelector(".reject-btn").addEventListener("click", () => {
-            rejectSubmission(entry.id);
-          });
+            item.querySelector(".approve-btn").addEventListener("click", () => {
+              approveSubmission(entry.id);
+            });
+            item.querySelector(".reject-btn").addEventListener("click", () => {
+              rejectSubmission(entry.id);
+            });
 
-          reviewList.appendChild(item);
-        });
+            reviewList.appendChild(item);
+          });
+        }
+
+        renderFeedbackList();
       }
 
       function unlockReview() {
@@ -4031,7 +4418,7 @@
           return;
         }
 
-        alert("Wrong password. Check the backwards hint under Review submissions.");
+        alert("Wrong password. Please try again.");
       }
 
       updateAnimalCount();
@@ -4054,15 +4441,17 @@
       });
 
       function getFilteredAnimals() {
-        return getAllAnimals().filter((animal) => {
-          const matchesHabitat =
-            selectedHabitat === "All" || animal.habitat === selectedHabitat;
-          const matchesSearch =
-            !searchQuery ||
-            animal.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            animal.type.toLowerCase().includes(searchQuery.toLowerCase());
-          return matchesHabitat && matchesSearch;
-        });
+        return getAllAnimals()
+          .filter((animal) => {
+            const matchesHabitat =
+              selectedHabitat === "All" || animal.habitat === selectedHabitat;
+            const matchesSearch =
+              !searchQuery ||
+              animal.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              animal.type.toLowerCase().includes(searchQuery.toLowerCase());
+            return matchesHabitat && matchesSearch;
+          })
+          .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
       }
 
       function habitatClass(habitat) {
@@ -4133,6 +4522,11 @@
         showScreen(addScreen);
       }
 
+      function showFeedbackForm() {
+        clearFeedbackErrors();
+        showScreen(feedbackScreen);
+      }
+
       function showReviewScreen() {
         reviewUnlocked = false;
         reviewPinInput.value = "";
@@ -4158,6 +4552,10 @@
       addCancelBtn.addEventListener("click", showHome);
       addAnimalForm.addEventListener("submit", handleAddSubmit);
       successHomeBtn.addEventListener("click", showHome);
+      feedbackLink.addEventListener("click", showFeedbackForm);
+      feedbackBackBtn.addEventListener("click", showHome);
+      feedbackCancelBtn.addEventListener("click", showHome);
+      feedbackForm.addEventListener("submit", handleFeedbackSubmit);
       reviewLink.addEventListener("click", showReviewScreen);
       reviewBackBtn.addEventListener("click", showHome);
       reviewUnlockBtn.addEventListener("click", unlockReview);
@@ -4167,5 +4565,103 @@
 
       renderGrid();
     </script>
+    <script>
+      const TRANSLATE_LANGUAGES = [
+        { code: "", label: "English" },
+        { code: "es", label: "Español" },
+        { code: "fr", label: "Français" },
+        { code: "de", label: "Deutsch" },
+        { code: "pt", label: "Português" },
+        { code: "zh-CN", label: "中文" },
+        { code: "ja", label: "日本語" },
+        { code: "ko", label: "한국어" },
+        { code: "ar", label: "العربية" },
+        { code: "hi", label: "हिन्दी" },
+      ];
+
+      let translateReady = false;
+      let pendingTranslateLang = null;
+
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          {
+            pageLanguage: "en",
+            includedLanguages: TRANSLATE_LANGUAGES.map((lang) => lang.code || "en")
+              .filter(Boolean)
+              .join(","),
+            autoDisplay: false,
+          },
+          "google_translate_element"
+        );
+
+        const waitForSelect = window.setInterval(() => {
+          const select = document.querySelector(".goog-te-combo");
+          if (!select) return;
+
+          window.clearInterval(waitForSelect);
+          translateReady = true;
+
+          if (pendingTranslateLang !== null) {
+            applyPageLanguage(pendingTranslateLang);
+            pendingTranslateLang = null;
+          }
+        }, 100);
+      }
+
+      function getTranslateSelect() {
+        return document.querySelector(".goog-te-combo");
+      }
+
+      function applyPageLanguage(langCode) {
+        if (!langCode) {
+          document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
+          window.location.reload();
+          return;
+        }
+
+        const select = getTranslateSelect();
+        if (!select) {
+          pendingTranslateLang = langCode;
+          return;
+        }
+
+        if (select.value !== langCode) {
+          select.value = langCode;
+          select.dispatchEvent(new Event("change"));
+        }
+
+        document.querySelectorAll(".translate-option").forEach((button) => {
+          button.classList.toggle("active", button.dataset.lang === langCode);
+        });
+      }
+
+      function initTranslateControls() {
+        const translateBtn = document.getElementById("translate-btn");
+        const translateMenu = document.getElementById("translate-menu");
+        const translateWrap = document.getElementById("translate-wrap");
+
+        translateBtn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          translateMenu.hidden = !translateMenu.hidden;
+        });
+
+        translateMenu.querySelectorAll(".translate-option").forEach((button) => {
+          button.addEventListener("click", () => {
+            applyPageLanguage(button.dataset.lang || "");
+            translateMenu.hidden = true;
+          });
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!translateWrap.contains(event.target)) {
+            translateMenu.hidden = true;
+          }
+        });
+      }
+
+      initTranslateControls();
+    </script>
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   </body>
 </html>
