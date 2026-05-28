@@ -1,0 +1,4171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Wild Wonders — a fun animal encyclopedia for kids with facts, habitats, and diets!"
+    />
+    <title>Wild Wonders — Animal Encyclopedia for Kids</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #f4f7ef;
+        --bg-accent: #e8f0e0;
+        --surface: #ffffff;
+        --forest: #2d5016;
+        --forest-light: #4a7c2e;
+        --ocean: #1a6b8a;
+        --ocean-light: #3a9ec4;
+        --earth: #8b6914;
+        --earth-light: #c4a035;
+        --sand: #f5ead6;
+        --text: #3d2c1e;
+        --text-muted: #6b5b4f;
+        --radius: 16px;
+        --shadow: 0 4px 20px rgba(45, 80, 22, 0.1);
+      }
+
+      body {
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      .app {
+        min-height: 100vh;
+        background:
+          radial-gradient(ellipse at 10% 0%, rgba(74, 124, 46, 0.15) 0%, transparent 50%),
+          radial-gradient(ellipse at 90% 100%, rgba(26, 107, 138, 0.12) 0%, transparent 50%),
+          linear-gradient(180deg, var(--bg-accent) 0%, var(--bg) 40%, var(--sand) 100%);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0.85rem 1.25rem 2rem;
+      }
+
+      .header {
+        margin-bottom: 0.65rem;
+      }
+
+      .header-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .header-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-align: left;
+      }
+
+      .header-icon {
+        font-size: 2.25rem;
+        line-height: 1;
+        animation: sway 4s ease-in-out infinite;
+        flex-shrink: 0;
+      }
+
+      @keyframes sway {
+        0%,
+        100% {
+          transform: rotate(-5deg);
+        }
+        50% {
+          transform: rotate(5deg);
+        }
+      }
+
+      .header h1 {
+        font-size: clamp(1.5rem, 4vw, 2.1rem);
+        font-weight: 800;
+        color: var(--forest);
+        margin-top: 0;
+      }
+
+      .tagline {
+        color: var(--text-muted);
+        margin-top: 0.15rem;
+        font-size: 0.95rem;
+      }
+
+      .animal-count {
+        display: inline-block;
+        margin-top: 0;
+        padding: 0.35rem 0.85rem;
+        background: rgba(74, 124, 46, 0.12);
+        border: 1px solid rgba(74, 124, 46, 0.25);
+        border-radius: 999px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--forest-light);
+        white-space: nowrap;
+      }
+
+      .toolbar {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        margin-bottom: 0.75rem;
+        background: rgba(255, 255, 255, 0.72);
+        border: 2px solid rgba(45, 80, 22, 0.1);
+        border-radius: var(--radius);
+        padding: 0.75rem 0.85rem;
+        box-shadow: var(--shadow);
+      }
+
+      .filter-row {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        flex-wrap: wrap;
+      }
+
+      .animals-area {
+        margin-top: 0;
+        margin-left: calc(-1 * 1.25rem);
+        margin-right: calc(-1 * 1.25rem);
+        padding: 0.35rem 1.25rem 0;
+      }
+
+      .search-row {
+        display: flex;
+        gap: 0.65rem;
+        flex-wrap: wrap;
+        align-items: stretch;
+      }
+
+      .search-wrap {
+        flex: 1 1 220px;
+        min-width: 180px;
+        position: relative;
+      }
+
+      .search-wrap span {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.1rem;
+        pointer-events: none;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.75rem;
+        border: 2px solid rgba(45, 80, 22, 0.2);
+        border-radius: var(--radius);
+        font-family: inherit;
+        font-size: 1rem;
+        background: var(--surface);
+        color: var(--text);
+        transition: border-color 0.2s;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: var(--forest-light);
+      }
+
+      .random-btn {
+        padding: 0.65rem 1rem;
+        background: linear-gradient(135deg, var(--forest-light), var(--forest));
+        color: white;
+        border: none;
+        border-radius: var(--radius);
+        font-family: inherit;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: transform 0.15s, box-shadow 0.15s;
+        box-shadow: var(--shadow);
+      }
+
+      .random-btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .random-btn:active {
+        transform: scale(0.98);
+      }
+
+      .add-animal-btn {
+        padding: 0.65rem 1rem;
+        background: var(--surface);
+        color: var(--forest);
+        border: 2px solid rgba(45, 80, 22, 0.25);
+        border-radius: var(--radius);
+        font-family: inherit;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: transform 0.15s, background 0.15s;
+        box-shadow: var(--shadow);
+      }
+
+      .add-animal-btn:hover {
+        background: rgba(74, 124, 46, 0.08);
+        transform: translateY(-1px);
+      }
+
+      .form-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        border: 2px solid rgba(45, 80, 22, 0.12);
+        box-shadow: var(--shadow);
+        max-width: 640px;
+        margin: 0 auto;
+      }
+
+      .form-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--forest);
+        margin-bottom: 0.35rem;
+        text-align: center;
+      }
+
+      .form-intro {
+        text-align: center;
+        color: var(--text-muted);
+        margin-bottom: 1.25rem;
+        font-size: 0.95rem;
+      }
+
+      .form-grid {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .form-field label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--forest-light);
+        margin-bottom: 0.35rem;
+      }
+
+      .form-field input,
+      .form-field select,
+      .form-field textarea {
+        width: 100%;
+        padding: 0.7rem 0.85rem;
+        border: 2px solid rgba(45, 80, 22, 0.15);
+        border-radius: calc(var(--radius) - 4px);
+        font-family: inherit;
+        font-size: 1rem;
+        color: var(--text);
+        background: #fff;
+      }
+
+      .form-field textarea {
+        min-height: 88px;
+        resize: vertical;
+      }
+
+      .form-field input:focus,
+      .form-field select:focus,
+      .form-field textarea:focus {
+        outline: none;
+        border-color: var(--forest-light);
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      .form-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+      }
+
+      .submit-btn {
+        flex: 1;
+        min-width: 160px;
+        padding: 0.85rem 1.25rem;
+        background: linear-gradient(135deg, var(--forest-light), var(--forest));
+        color: white;
+        border: none;
+        border-radius: var(--radius);
+        font-family: inherit;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .cancel-btn {
+        padding: 0.85rem 1.25rem;
+        background: var(--surface);
+        color: var(--text-muted);
+        border: 2px solid rgba(45, 80, 22, 0.15);
+        border-radius: var(--radius);
+        font-family: inherit;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .form-error {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+        padding: 0.85rem 1rem;
+        border-radius: calc(var(--radius) - 4px);
+        font-size: 0.95rem;
+      }
+
+      .form-error ul {
+        margin-left: 1.1rem;
+        margin-top: 0.35rem;
+      }
+
+      .success-card {
+        text-align: center;
+        padding: 2rem 1.5rem;
+      }
+
+      .success-icon {
+        font-size: 3.5rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .success-card h2 {
+        color: var(--forest);
+        margin-bottom: 0.75rem;
+      }
+
+      .success-card p {
+        color: var(--text-muted);
+        max-width: 420px;
+        margin: 0 auto 1.25rem;
+      }
+
+      .review-list {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .review-item {
+        background: var(--surface);
+        border: 2px solid rgba(45, 80, 22, 0.12);
+        border-radius: var(--radius);
+        padding: 1.25rem;
+        box-shadow: var(--shadow);
+      }
+
+      .review-item-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .review-item-emoji {
+        font-size: 2.5rem;
+      }
+
+      .review-item-name {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--forest);
+      }
+
+      .review-meta {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+
+      .review-facts {
+        display: grid;
+        gap: 0.5rem;
+        margin: 0.85rem 0 1rem;
+        font-size: 0.95rem;
+      }
+
+      .review-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .approve-btn,
+      .reject-btn {
+        padding: 0.55rem 1rem;
+        border-radius: 999px;
+        font-family: inherit;
+        font-size: 0.9rem;
+        font-weight: 700;
+        cursor: pointer;
+        border: none;
+      }
+
+      .approve-btn {
+        background: var(--forest);
+        color: white;
+      }
+
+      .reject-btn {
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+      }
+
+      .custom-badge {
+        display: inline-block;
+        margin-top: 0.35rem;
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 0.15rem 0.45rem;
+        border-radius: 999px;
+        background: rgba(196, 160, 53, 0.18);
+        color: var(--earth);
+      }
+
+      .footer-link {
+        background: none;
+        border: none;
+        color: var(--forest-light);
+        font-family: inherit;
+        font-size: 0.85rem;
+        cursor: pointer;
+        text-decoration: underline;
+        margin-top: 0.35rem;
+      }
+
+      .password-hint {
+        margin-top: 0.35rem;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+      }
+
+      .pin-panel {
+        max-width: 360px;
+        margin: 0 auto 1.25rem;
+        text-align: center;
+      }
+
+      .empty-review {
+        text-align: center;
+        color: var(--text-muted);
+        padding: 2rem 1rem;
+      }
+
+      @media (max-width: 600px) {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.7;
+        cursor: wait;
+      }
+
+      .form-note {
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-top: 0.75rem;
+      }
+
+      .filter-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-muted);
+        margin-bottom: 0;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .filter-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .filter-pill {
+        background: var(--surface);
+        border: 2px solid rgba(45, 80, 22, 0.15);
+        color: var(--text);
+        padding: 0.4rem 0.85rem;
+        border-radius: 999px;
+        font-family: inherit;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+
+      .filter-pill:hover {
+        border-color: var(--forest-light);
+        background: rgba(74, 124, 46, 0.06);
+      }
+
+      .filter-pill.active {
+        background: var(--forest);
+        border-color: var(--forest);
+        color: white;
+      }
+
+      .results-info {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+      }
+
+      .animal-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+        gap: 0.9rem;
+      }
+
+      .animal-card {
+        background: var(--surface);
+        border: 2px solid rgba(45, 80, 22, 0.12);
+        border-radius: var(--radius);
+        padding: 0.9rem 0.45rem 0.8rem;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+        box-shadow: var(--shadow);
+        min-height: 132px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .animal-card:hover {
+        transform: translateY(-3px);
+        border-color: var(--forest-light);
+        box-shadow: 0 8px 28px rgba(45, 80, 22, 0.15);
+      }
+
+      .animal-card:active {
+        transform: scale(0.98);
+      }
+
+      .card-emoji {
+        font-size: 2.35rem;
+        line-height: 1;
+        margin-bottom: 0.35rem;
+      }
+
+      .card-name {
+        font-weight: 700;
+        font-size: 0.92rem;
+        color: var(--forest);
+        margin-bottom: 0.3rem;
+        line-height: 1.2;
+      }
+
+      .habitat-badge {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 0.2rem 0.55rem;
+        border-radius: 999px;
+        background: rgba(26, 107, 138, 0.1);
+        color: var(--ocean);
+      }
+
+      .habitat-badge.grassland {
+        background: rgba(196, 160, 53, 0.15);
+        color: var(--earth);
+      }
+
+      .habitat-badge.forest {
+        background: rgba(74, 124, 46, 0.12);
+        color: var(--forest-light);
+      }
+
+      .habitat-badge.jungle {
+        background: rgba(45, 80, 22, 0.12);
+        color: var(--forest);
+      }
+
+      .habitat-badge.ocean {
+        background: rgba(26, 107, 138, 0.12);
+        color: var(--ocean);
+      }
+
+      .habitat-badge.arctic {
+        background: rgba(58, 158, 196, 0.15);
+        color: #1a5276;
+      }
+
+      .habitat-badge.desert {
+        background: rgba(196, 120, 53, 0.15);
+        color: #a0522d;
+      }
+
+      .habitat-badge.farm {
+        background: rgba(139, 105, 20, 0.12);
+        color: var(--earth);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 3rem 1.5rem;
+        background: var(--surface);
+        border-radius: var(--radius);
+        border: 2px dashed rgba(45, 80, 22, 0.2);
+      }
+
+      .empty-state .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .empty-state p {
+        color: var(--text-muted);
+        font-size: 1.05rem;
+      }
+
+      .screen {
+        display: none;
+      }
+
+      .screen.active {
+        display: block;
+      }
+
+      .detail-header {
+        text-align: center;
+        margin-bottom: 1.75rem;
+      }
+
+      .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: var(--surface);
+        border: 2px solid rgba(45, 80, 22, 0.2);
+        color: var(--forest);
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        font-family: inherit;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        margin-bottom: 1.25rem;
+        transition: background 0.15s;
+      }
+
+      .back-btn:hover {
+        background: rgba(74, 124, 46, 0.08);
+      }
+
+      .detail-emoji {
+        font-size: 5rem;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+      }
+
+      .detail-name {
+        font-size: clamp(2rem, 6vw, 2.75rem);
+        font-weight: 800;
+        color: var(--forest);
+      }
+
+      .detail-type {
+        margin-top: 0.35rem;
+        font-size: 1rem;
+        color: var(--text-muted);
+        font-weight: 600;
+      }
+
+      .fact-grid {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .fact-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 1.25rem 1.35rem;
+        border-left: 4px solid var(--forest-light);
+        box-shadow: var(--shadow);
+      }
+
+      .fact-card.highlight {
+        border-left-color: var(--earth-light);
+        background: linear-gradient(135deg, #fffef8, var(--surface));
+      }
+
+      .fact-card.ocean-fact {
+        border-left-color: var(--ocean-light);
+      }
+
+      .fact-card.food-fact {
+        border-left-color: var(--earth);
+      }
+
+      .fact-card.size-fact {
+        border-left-color: #7c6a5a;
+      }
+
+      .fact-label {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--forest-light);
+        margin-bottom: 0.4rem;
+      }
+
+      .fact-text {
+        font-size: 1.05rem;
+        color: var(--text);
+        line-height: 1.65;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 2.5rem;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        opacity: 0.8;
+      }
+
+      @media (min-width: 900px) {
+        .container {
+          padding-left: 1.5rem;
+          padding-right: 1.5rem;
+        }
+
+        .animals-area {
+          margin-left: calc(-1 * 1.5rem);
+          margin-right: calc(-1 * 1.5rem);
+          padding-left: 1.5rem;
+          padding-right: 1.5rem;
+        }
+
+        .animal-grid {
+          grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+          gap: 1rem;
+        }
+
+        .tagline {
+          display: none;
+        }
+      }
+
+      @media (min-width: 1100px) {
+        .animal-grid {
+          grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding-left: 0.85rem;
+          padding-right: 0.85rem;
+        }
+
+        .animals-area {
+          margin-left: calc(-1 * 0.85rem);
+          margin-right: calc(-1 * 0.85rem);
+          padding-left: 0.85rem;
+          padding-right: 0.85rem;
+        }
+
+        .header-top {
+          flex-direction: row;
+          align-items: center;
+        }
+
+        .tagline {
+          font-size: 0.85rem;
+        }
+
+        .filter-row {
+          align-items: flex-start;
+        }
+
+        .filter-label {
+          width: 100%;
+          margin-bottom: 0.15rem;
+        }
+
+        .animal-grid {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 0.7rem;
+        }
+
+        .animal-card {
+          padding: 0.75rem 0.35rem 0.7rem;
+          min-height: 120px;
+        }
+
+        .card-emoji {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <div class="container">
+        <!-- HOME SCREEN -->
+        <section id="home-screen" class="screen active">
+          <header class="header">
+            <div class="header-top">
+              <div class="header-brand">
+                <div class="header-icon">🌿</div>
+                <div>
+                  <h1>Wild Wonders</h1>
+                  <p class="tagline">Your fun animal encyclopedia for kids!</p>
+                </div>
+              </div>
+              <p class="animal-count" id="animal-count"></p>
+            </div>
+          </header>
+
+          <div class="toolbar">
+            <div class="search-row">
+              <div class="search-wrap">
+                <span>🔍</span>
+                <input
+                  type="search"
+                  id="search-input"
+                  class="search-input"
+                  placeholder="Search for an animal..."
+                  autocomplete="off"
+                />
+              </div>
+              <button type="button" class="add-animal-btn" id="add-animal-btn">
+                ➕ Add Animal
+              </button>
+              <button type="button" class="random-btn" id="random-btn">
+                🎲 Surprise Me!
+              </button>
+            </div>
+
+            <div class="filter-row">
+              <p class="filter-label">Where do they live?</p>
+              <div class="filter-grid" id="filter-grid"></div>
+            </div>
+          </div>
+
+          <div class="animals-area">
+            <p class="results-info" id="results-info"></p>
+            <div class="animal-grid" id="animal-grid"></div>
+            <div class="empty-state" id="empty-state" hidden>
+              <div class="empty-icon">🦔</div>
+              <p>No animals found — try a different name!</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- DETAIL SCREEN -->
+        <section id="detail-screen" class="screen">
+          <button type="button" class="back-btn" id="back-btn">
+            ← Back to all animals
+          </button>
+
+          <div class="detail-header">
+            <div class="detail-emoji" id="detail-emoji"></div>
+            <h2 class="detail-name" id="detail-name"></h2>
+            <p class="detail-type" id="detail-type"></p>
+          </div>
+
+          <div class="fact-grid">
+            <div class="fact-card highlight">
+              <p class="fact-label">⭐ Fun Fact</p>
+              <p class="fact-text" id="detail-fun-fact"></p>
+            </div>
+            <div class="fact-card">
+              <p class="fact-label">💡 Did You Know?</p>
+              <p class="fact-text" id="detail-extra-fact"></p>
+            </div>
+            <div class="fact-card ocean-fact">
+              <p class="fact-label">🌍 Where They Live</p>
+              <p class="fact-text" id="detail-lives-in"></p>
+            </div>
+            <div class="fact-card food-fact">
+              <p class="fact-label">🍽️ What They Eat</p>
+              <p class="fact-text" id="detail-diet"></p>
+            </div>
+            <div class="fact-card size-fact">
+              <p class="fact-label">📏 How Big They Are</p>
+              <p class="fact-text" id="detail-size"></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ADD ANIMAL SCREEN -->
+        <section id="add-screen" class="screen">
+          <button type="button" class="back-btn" id="add-back-btn">
+            ← Back to all animals
+          </button>
+
+          <div class="form-card">
+            <h2 class="form-title">Add Your Animal</h2>
+            <p class="form-intro">
+              Share a real animal with fun facts! We'll do a quick check first,
+              then a grown-up will make sure it's appropriate, true, and really
+              about animals before it goes live.
+            </p>
+
+            <form id="add-animal-form" class="form-grid" novalidate>
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="add-name">Animal name</label>
+                  <input id="add-name" name="name" required maxlength="40" placeholder="Red Panda" />
+                </div>
+                <div class="form-field">
+                  <label for="add-emoji">Emoji</label>
+                  <input id="add-emoji" name="emoji" maxlength="10" placeholder="🐼" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="add-type">Animal type</label>
+                  <select id="add-type" name="type" required>
+                    <option value="Mammal">Mammal</option>
+                    <option value="Bird">Bird</option>
+                    <option value="Reptile">Reptile</option>
+                    <option value="Amphibian">Amphibian</option>
+                    <option value="Fish">Fish</option>
+                    <option value="Insect">Insect</option>
+                    <option value="Crustacean">Crustacean</option>
+                    <option value="Mollusk">Mollusk</option>
+                    <option value="Arachnid">Arachnid</option>
+                    <option value="Invertebrate">Invertebrate</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label for="add-habitat">Habitat</label>
+                  <select id="add-habitat" name="habitat" required>
+                    <option value="Grassland">Grassland</option>
+                    <option value="Forest">Forest</option>
+                    <option value="Jungle">Jungle</option>
+                    <option value="Ocean">Ocean</option>
+                    <option value="Arctic">Arctic</option>
+                    <option value="Desert">Desert</option>
+                    <option value="Farm">Farm</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label for="add-lives-in">Where they live</label>
+                <textarea id="add-lives-in" name="livesIn" required maxlength="200" placeholder="Mountain forests in China"></textarea>
+              </div>
+
+              <div class="form-field">
+                <label for="add-diet">What they eat</label>
+                <textarea id="add-diet" name="diet" required maxlength="200" placeholder="Mostly bamboo and fruit"></textarea>
+              </div>
+
+              <div class="form-field">
+                <label for="add-size">How big they are</label>
+                <input id="add-size" name="size" required maxlength="120" placeholder="About as big as a house cat" />
+              </div>
+
+              <div class="form-field">
+                <label for="add-fun-fact">Fun fact</label>
+                <textarea id="add-fun-fact" name="funFact" required maxlength="200" placeholder="A short, true, kid-friendly fact"></textarea>
+              </div>
+
+              <div class="form-field">
+                <label for="add-extra-fact">Did you know?</label>
+                <textarea id="add-extra-fact" name="extraFact" required maxlength="200" placeholder="Another true fact about this animal"></textarea>
+              </div>
+
+              <div class="form-field">
+                <label for="add-author">Your first name (optional)</label>
+                <input id="add-author" name="author" maxlength="30" placeholder="Alex" />
+              </div>
+
+              <div id="form-error-box" class="form-error" hidden></div>
+
+              <div class="form-actions">
+                <button type="submit" class="submit-btn">Send for review</button>
+                <button type="button" class="cancel-btn" id="add-cancel-btn">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- SUBMIT SUCCESS SCREEN -->
+        <section id="success-screen" class="screen">
+          <div class="form-card success-card">
+            <div class="success-icon">📬</div>
+            <h2>Thanks for sharing!</h2>
+            <p id="success-message">
+              Thanks for sharing! Your animal passed our quick checks and was
+              sent to a grown-up. They will make sure the facts are true before
+              it appears in the encyclopedia.
+            </p>
+            <button type="button" class="submit-btn" id="success-home-btn">
+              Back to animals
+            </button>
+          </div>
+        </section>
+
+        <!-- REVIEW SCREEN (for grown-ups) -->
+        <section id="review-screen" class="screen">
+          <button type="button" class="back-btn" id="review-back-btn">
+            ← Back to all animals
+          </button>
+
+          <div class="form-card">
+            <h2 class="form-title">Review Submissions</h2>
+            <p class="form-intro">
+              Check each animal for appropriate language, true facts, and animal
+              topics. Approve good ones or reject ones that don't fit.
+            </p>
+
+            <div id="pin-panel" class="pin-panel">
+              <div class="form-field">
+                <label for="review-pin">Grown-up password</label>
+                <input id="review-pin" type="password" placeholder="Enter password" />
+              </div>
+              <button type="button" class="submit-btn" id="review-unlock-btn" style="width: 100%; margin-top: 0.75rem">
+                Unlock review
+              </button>
+              <p class="form-intro" style="margin-top: 0.75rem; font-size: 0.82rem">
+                Type the password normally — use the backwards hint in the footer if
+                you need help.
+              </p>
+            </div>
+
+            <div id="review-panel" hidden>
+              <p class="results-info" id="review-count"></p>
+              <div class="review-list" id="review-list"></div>
+              <div class="empty-review" id="empty-review" hidden>
+                No animals waiting for review right now.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <footer class="footer">
+          Made with 🌿 for curious kids everywhere
+          <br />
+          <button type="button" class="footer-link" id="review-link">
+            Review submissions (grown-ups)
+          </button>
+          <p class="password-hint">(password: sredniwldiw) Password backwards</p>
+        </footer>
+      </div>
+    </div>
+
+    <script>
+      const HABITATS = [
+        "All",
+        "Grassland",
+        "Forest",
+        "Jungle",
+        "Ocean",
+        "Arctic",
+        "Desert",
+        "Farm",
+      ];
+
+      const ANIMALS = [
+        {
+          id: "lion",
+          name: "Lion",
+          emoji: "🦁",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa — open grasslands called savannas",
+          diet: "Meat — they hunt zebras, wildebeest, and other animals",
+          size: "About as long as a small car",
+          funFact: "A lion's roar can be heard from 5 miles away!",
+          extraFact: "Only male lions have big manes!",
+        },
+        {
+          id: "zebra",
+          name: "Zebra",
+          emoji: "🦓",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa — grassy plains and savannas",
+          diet: "Grass and plants — they graze all day",
+          size: "About as tall as a grown-up's shoulders",
+          funFact: "Every zebra has a unique stripe pattern — like a fingerprint!",
+          extraFact: "Zebras sleep standing up so they can run away fast if danger comes!",
+        },
+        {
+          id: "elephant",
+          name: "Elephant",
+          emoji: "🐘",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa and parts of Asia — grasslands and forests",
+          diet: "Plants, grass, fruit, and tree bark",
+          size: "As tall as a one-story house!",
+          funFact: "Elephants are the biggest land animals on Earth!",
+          extraFact: "They use their trunks like a hand — to drink, grab food, and say hello!",
+        },
+        {
+          id: "giraffe",
+          name: "Giraffe",
+          emoji: "🦒",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa — open savannas with acacia trees",
+          diet: "Leaves from tall trees, especially acacia leaves",
+          size: "Taller than a basketball hoop!",
+          funFact: "Giraffes have the same number of neck bones as humans — just much bigger!",
+          extraFact: "Their tongues are about 18 inches long and dark purple!",
+        },
+        {
+          id: "cheetah",
+          name: "Cheetah",
+          emoji: "🐆",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa and a small part of Iran — open grasslands",
+          diet: "Meat — mostly small antelopes and gazelles",
+          size: "About as long as a dining table",
+          funFact: "Cheetahs are the fastest land animals — they can run up to 70 mph!",
+          extraFact: "They have black 'tear marks' on their face that help block the sun!",
+        },
+        {
+          id: "hyena",
+          name: "Hyena",
+          emoji: "🐾",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa — savannas and grasslands",
+          diet: "Meat — they hunt and also eat leftovers from other hunters",
+          size: "About as big as a medium-sized dog",
+          funFact: "Hyena laughs aren't really laughing — it's how they talk to each other!",
+          extraFact: "Hyenas have super strong jaws — even stronger than lions!",
+        },
+        {
+          id: "rhino",
+          name: "Rhino",
+          emoji: "🦏",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa and parts of Asia — grasslands and bush",
+          diet: "Grass, leaves, and branches",
+          size: "As heavy as a small truck!",
+          funFact: "Rhinos have thick skin that looks like armor!",
+          extraFact: "Their horns are made of keratin — the same stuff as your fingernails!",
+        },
+        {
+          id: "warthog",
+          name: "Warthog",
+          emoji: "🐗",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa — savannas and grasslands",
+          diet: "Grass, roots, berries, and sometimes small animals",
+          size: "About as big as a large dog",
+          funFact: "Warthogs run with their tails straight up like a flag!",
+          extraFact: "They kneel on their front legs to graze on grass!",
+        },
+        {
+          id: "meerkat",
+          name: "Meerkat",
+          emoji: "🐿️",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Southern Africa — dry grasslands and deserts",
+          diet: "Insects, scorpions, lizards, and small plants",
+          size: "About as long as a ruler",
+          funFact: "One meerkat always stands guard while the group eats!",
+          extraFact: "Meerkats live in big family groups called mobs!",
+        },
+        {
+          id: "ostrich",
+          name: "Ostrich",
+          emoji: "🪶",
+          type: "Bird",
+          habitat: "Grassland",
+          livesIn: "Africa — savannas and open country",
+          diet: "Plants, seeds, insects, and small lizards",
+          size: "Taller than most grown-ups — up to 9 feet!",
+          funFact: "Ostriches are the biggest birds in the world!",
+          extraFact: "They can't fly, but they can run faster than a horse!",
+        },
+        {
+          id: "bear",
+          name: "Bear",
+          emoji: "🐻",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "North America, Europe, and Asia — forests and mountains",
+          diet: "Fish, berries, honey, nuts, and sometimes meat",
+          size: "From dog-sized (sun bears) to as big as a refrigerator (grizzlies)",
+          funFact: "Bears can smell food from miles away!",
+          extraFact: "Bears hibernate in winter — they sleep for months without eating!",
+        },
+        {
+          id: "wolf",
+          name: "Wolf",
+          emoji: "🐺",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "North America, Europe, and Asia — forests and tundra",
+          diet: "Meat — deer, elk, rabbits, and other animals",
+          size: "About as big as a large dog",
+          funFact: "Wolves howl to talk to their pack from far away!",
+          extraFact: "A wolf pack is usually a family — mom, dad, and pups!",
+        },
+        {
+          id: "deer",
+          name: "Deer",
+          emoji: "🦌",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Forests all over the world — North America, Europe, Asia",
+          diet: "Leaves, grass, acorns, and twigs",
+          size: "About as tall as a kitchen counter (white-tailed deer)",
+          funFact: "Male deer grow new antlers every year!",
+          extraFact: "Deer can jump up to 10 feet high!",
+        },
+        {
+          id: "fox",
+          name: "Fox",
+          emoji: "🦊",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Forests, fields, and even cities — all over the world",
+          diet: "Mice, rabbits, birds, berries, and insects",
+          size: "About as big as a small dog",
+          funFact: "Foxes have excellent hearing — they can hear a mouse underground!",
+          extraFact: "A group of foxes is called a skulk!",
+        },
+        {
+          id: "owl",
+          name: "Owl",
+          emoji: "🦉",
+          type: "Bird",
+          habitat: "Forest",
+          livesIn: "Forests everywhere — from deserts to the Arctic",
+          diet: "Mice, rats, insects, and small birds",
+          size: "From as small as a soda can to as big as a cat",
+          funFact: "Owls can turn their heads almost all the way around!",
+          extraFact: "Owls are silent flyers — you can't hear them coming!",
+        },
+        {
+          id: "squirrel",
+          name: "Squirrel",
+          emoji: "🐿️",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Forests and parks all over the world",
+          diet: "Nuts, seeds, fruit, and sometimes insects",
+          size: "About as long as your forearm",
+          funFact: "Squirrels bury nuts and sometimes forget where — that's how new trees grow!",
+          extraFact: "They can jump up to 10 times their body length!",
+        },
+        {
+          id: "raccoon",
+          name: "Raccoon",
+          emoji: "🦝",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "North and Central America — forests, rivers, and cities",
+          diet: "Fruit, nuts, insects, fish, and whatever they can find!",
+          size: "About as big as a cat",
+          funFact: "Raccoons wash their food in water before eating — that's why they're called 'wash bears'!",
+          extraFact: "Their front paws are almost as good as hands!",
+        },
+        {
+          id: "moose",
+          name: "Moose",
+          emoji: "🫎",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Northern forests — Canada, Alaska, Scandinavia, and Russia",
+          diet: "Leaves, twigs, bark, and water plants",
+          size: "Taller than most horses — males can be 7 feet at the shoulder!",
+          funFact: "Moose are the biggest members of the deer family!",
+          extraFact: "Their antlers can spread wider than you are tall!",
+        },
+        {
+          id: "porcupine",
+          name: "Porcupine",
+          emoji: "🦔",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Forests in North America, South America, Africa, and Asia",
+          diet: "Tree bark, leaves, fruit, and green plants",
+          size: "About as big as a small dog",
+          funFact: "Porcupines have about 30,000 sharp quills on their back!",
+          extraFact: "They can't shoot their quills — but they puff up to look scary!",
+        },
+        {
+          id: "red-panda",
+          name: "Red Panda",
+          emoji: "🐼",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Mountain forests in Nepal, India, and China",
+          diet: "Mostly bamboo, plus fruit, eggs, and insects",
+          size: "About as big as a house cat",
+          funFact: "Red pandas aren't related to giant pandas — they're more like raccoons!",
+          extraFact: "They have a fluffy tail they use as a blanket in cold weather!",
+        },
+        {
+          id: "tiger",
+          name: "Tiger",
+          emoji: "🐯",
+          type: "Mammal",
+          habitat: "Jungle",
+          livesIn: "Jungles and forests in Asia — India, Russia, and Southeast Asia",
+          diet: "Meat — deer, wild pigs, and other large animals",
+          size: "Up to 11 feet long including the tail!",
+          funFact: "Every tiger has a unique stripe pattern!",
+          extraFact: "Tigers love to swim and are great at it!",
+        },
+        {
+          id: "gorilla",
+          name: "Gorilla",
+          emoji: "🦍",
+          type: "Mammal",
+          habitat: "Jungle",
+          livesIn: "Rainforests in central Africa",
+          diet: "Leaves, stems, fruit, and bamboo shoots",
+          size: "Males can be as tall as a basketball player!",
+          funFact: "Gorillas are mostly gentle giants — they eat plants and live in family groups!",
+          extraFact: "They beat their chests to show strength, not always to fight!",
+        },
+        {
+          id: "parrot",
+          name: "Parrot",
+          emoji: "🦜",
+          type: "Bird",
+          habitat: "Jungle",
+          livesIn: "Tropical rainforests in South America, Africa, and Australia",
+          diet: "Fruit, nuts, seeds, and flowers",
+          size: "From sparrow-sized to as big as a cat (macaws)",
+          funFact: "Some parrots can live over 80 years!",
+          extraFact: "Parrots can mimic sounds — some even learn to talk!",
+        },
+        {
+          id: "sloth",
+          name: "Sloth",
+          emoji: "🦥",
+          type: "Mammal",
+          habitat: "Jungle",
+          livesIn: "Rainforests in Central and South America",
+          diet: "Leaves, especially from cecropia trees",
+          size: "About as long as a small dog",
+          funFact: "Sloths move so slowly that algae grows on their fur — it helps them hide!",
+          extraFact: "Sloths only poop once a week!",
+        },
+        {
+          id: "jaguar",
+          name: "Jaguar",
+          emoji: "🐆",
+          type: "Mammal",
+          habitat: "Jungle",
+          livesIn: "Rainforests in Central and South America",
+          diet: "Meat — deer, capybaras, fish, and turtles",
+          size: "About as long as a grown-up lying down",
+          funFact: "Jaguars have the strongest bite of any big cat!",
+          extraFact: "They love to swim and hunt in rivers!",
+        },
+        {
+          id: "toucan",
+          name: "Toucan",
+          emoji: "🦜",
+          type: "Bird",
+          habitat: "Jungle",
+          livesIn: "Rainforests in Central and South America",
+          diet: "Fruit, insects, and sometimes small lizards",
+          size: "About as big as a crow, with a huge colorful beak",
+          funFact: "A toucan's beak looks heavy but it's actually very light!",
+          extraFact: "Toucans use their beak to reach fruit on thin branches!",
+        },
+        {
+          id: "chameleon",
+          name: "Chameleon",
+          emoji: "🦎",
+          type: "Reptile",
+          habitat: "Jungle",
+          livesIn: "Rainforests and dry areas in Africa and Madagascar",
+          diet: "Insects — they shoot out their long tongue to catch them!",
+          size: "From as small as your thumb to as long as your arm",
+          funFact: "Chameleons change color to show mood and temperature, not just to hide!",
+          extraFact: "Their eyes move separately — each eye can look in a different direction!",
+        },
+        {
+          id: "orangutan",
+          name: "Orangutan",
+          emoji: "🦧",
+          type: "Mammal",
+          habitat: "Jungle",
+          livesIn: "Rainforests on the islands of Borneo and Sumatra",
+          diet: "Fruit, leaves, bark, and insects",
+          size: "Males can be as tall as a grown-up",
+          funFact: "Orangutans are one of the smartest animals — they use tools!",
+          extraFact: "Their name means 'person of the forest' in Malay!",
+        },
+        {
+          id: "poison-dart-frog",
+          name: "Poison Dart Frog",
+          emoji: "🐸",
+          type: "Amphibian",
+          habitat: "Jungle",
+          livesIn: "Rainforests in Central and South America",
+          diet: "Ants, termites, and tiny insects",
+          size: "Smaller than a golf ball!",
+          funFact: "Their bright colors warn predators: 'I'm poisonous — stay away!'",
+          extraFact: "Indigenous people once used their poison on blow darts for hunting!",
+        },
+        {
+          id: "capybara",
+          name: "Capybara",
+          emoji: "🐹",
+          type: "Mammal",
+          habitat: "Jungle",
+          livesIn: "Near rivers and lakes in South America",
+          diet: "Grass, water plants, fruit, and tree bark",
+          size: "About as big as a large dog — the biggest rodent in the world!",
+          funFact: "Capybaras are super friendly — other animals love to hang out with them!",
+          extraFact: "They can hold their breath underwater for up to 5 minutes!",
+        },
+        {
+          id: "dolphin",
+          name: "Dolphin",
+          emoji: "🐬",
+          type: "Mammal",
+          habitat: "Ocean",
+          livesIn: "Oceans all around the world — warm and cold waters",
+          diet: "Fish and squid",
+          size: "From as long as a surfboard to as long as a school bus (orcas)",
+          funFact: "Dolphins sleep with one eye open — half their brain stays awake!",
+          extraFact: "They use clicks and whistles to talk to each other!",
+        },
+        {
+          id: "shark",
+          name: "Shark",
+          emoji: "🦈",
+          type: "Fish",
+          habitat: "Ocean",
+          livesIn: "Oceans everywhere — from shallow reefs to the deep sea",
+          diet: "Fish, seals, squid, and sometimes plankton (whale sharks)",
+          size: "From hand-sized to as long as a bus (whale shark)",
+          funFact: "Sharks have been around since before dinosaurs!",
+          extraFact: "They lose and grow thousands of teeth in their lifetime!",
+        },
+        {
+          id: "whale",
+          name: "Whale",
+          emoji: "🐋",
+          type: "Mammal",
+          habitat: "Ocean",
+          livesIn: "Oceans all over the world",
+          diet: "Krill, plankton, fish, or squid — depends on the species",
+          size: "Blue whales are the biggest animals ever — longer than 3 school buses!",
+          funFact: "A blue whale's heart is as big as a small car!",
+          extraFact: "Whales sing songs that can travel hundreds of miles underwater!",
+        },
+        {
+          id: "octopus",
+          name: "Octopus",
+          emoji: "🐙",
+          type: "Mollusk",
+          habitat: "Ocean",
+          livesIn: "Oceans worldwide — coral reefs and the deep sea",
+          diet: "Crabs, clams, shrimp, and fish",
+          size: "From fist-sized to arms as long as a car (giant Pacific octopus)",
+          funFact: "Octopuses have three hearts and blue blood!",
+          extraFact: "They can change color and texture to camouflage in seconds!",
+        },
+        {
+          id: "sea-turtle",
+          name: "Sea Turtle",
+          emoji: "🐢",
+          type: "Reptile",
+          habitat: "Ocean",
+          livesIn: "Warm and temperate oceans — they come to beaches to lay eggs",
+          diet: "Jellyfish, seagrass, algae, and crabs",
+          size: "From dinner-plate sized to as long as a surfboard (leatherbacks)",
+          funFact: "Sea turtles can live over 100 years!",
+          extraFact: "Females return to the same beach where they were born to lay eggs!",
+        },
+        {
+          id: "clownfish",
+          name: "Clownfish",
+          emoji: "🐠",
+          type: "Fish",
+          habitat: "Ocean",
+          livesIn: "Coral reefs in the Pacific and Indian Oceans",
+          diet: "Algae, plankton, and leftover bits from their anemone home",
+          size: "About as long as your hand",
+          funFact: "Clownfish live safely inside stinging sea anemones — they're immune to the sting!",
+          extraFact: "All clownfish are born male — the biggest one becomes female!",
+        },
+        {
+          id: "jellyfish",
+          name: "Jellyfish",
+          emoji: "🪼",
+          type: "Invertebrate",
+          habitat: "Ocean",
+          livesIn: "Oceans everywhere — from surface to deep water",
+          diet: "Tiny plankton, fish eggs, and small fish",
+          size: "From marble-sized to tentacles 120 feet long (lion's mane jellyfish)",
+          funFact: "Jellyfish have no brain, heart, or bones!",
+          extraFact: "Some jellyfish can glow in the dark!",
+        },
+        {
+          id: "seahorse",
+          name: "Seahorse",
+          emoji: "🐚",
+          type: "Fish",
+          habitat: "Ocean",
+          livesIn: "Shallow tropical and temperate oceans — seagrass beds and coral reefs",
+          diet: "Tiny shrimp and plankton — they suck them up through their snout",
+          size: "From as small as a paperclip to as long as a banana",
+          funFact: "Male seahorses are the ones who carry and give birth to babies!",
+          extraFact: "Seahorses hold onto seaweed with their curly tail so they don't drift away!",
+        },
+        {
+          id: "stingray",
+          name: "Stingray",
+          emoji: "🐟",
+          type: "Fish",
+          habitat: "Ocean",
+          livesIn: "Warm oceans — sandy bottoms and coral reefs",
+          diet: "Crabs, clams, worms, and small fish",
+          size: "From plate-sized to as wide as a car (manta rays)",
+          funFact: "Stingrays hide under sand with just their eyes showing!",
+          extraFact: "Manta rays are gentle giants — they eat tiny plankton!",
+        },
+        {
+          id: "crab",
+          name: "Crab",
+          emoji: "🦀",
+          type: "Crustacean",
+          habitat: "Ocean",
+          livesIn: "Oceans, beaches, and rivers worldwide",
+          diet: "Algae, dead fish, worms, and whatever they scavenge",
+          size: "From coin-sized to legs as wide as a car (Japanese spider crab)",
+          funFact: "Crabs walk sideways because of how their legs bend!",
+          extraFact: "Some crabs can regenerate a lost claw!",
+        },
+        {
+          id: "polar-bear",
+          name: "Polar Bear",
+          emoji: "🐻‍❄️",
+          type: "Mammal",
+          habitat: "Arctic",
+          livesIn: "The Arctic — on sea ice and coastal areas",
+          diet: "Meat — mostly seals",
+          size: "Males can weigh as much as 10 grown-ups combined!",
+          funFact: "Polar bear fur is actually clear — it looks white because it reflects light!",
+          extraFact: "They are excellent swimmers and can swim for days!",
+        },
+        {
+          id: "penguin",
+          name: "Penguin",
+          emoji: "🐧",
+          type: "Bird",
+          habitat: "Arctic",
+          livesIn: "Antarctica and southern oceans — cold coasts and islands",
+          diet: "Fish, krill, and squid",
+          size: "From as tall as a ruler (little blue) to as tall as a child (emperor)",
+          funFact: "Penguins can't fly, but they're amazing swimmers!",
+          extraFact: "Emperor penguin dads keep eggs warm on their feet for two months!",
+        },
+        {
+          id: "walrus",
+          name: "Walrus",
+          emoji: "🦭",
+          type: "Mammal",
+          habitat: "Arctic",
+          livesIn: "Arctic Ocean — on ice floes and rocky coasts",
+          diet: "Clams, mussels, and other shellfish from the sea floor",
+          size: "Males can weigh as much as a small car!",
+          funFact: "Walruses use their long tusks to pull themselves onto ice!",
+          extraFact: "They have whiskers so sensitive they can feel clams in the dark mud!",
+        },
+        {
+          id: "arctic-fox",
+          name: "Arctic Fox",
+          emoji: "🦊",
+          type: "Mammal",
+          habitat: "Arctic",
+          livesIn: "Arctic tundra — Alaska, Canada, Greenland, and Russia",
+          diet: "Lemmings, birds, fish, and berries",
+          size: "About as big as a small dog",
+          funFact: "Arctic foxes change fur color — white in winter, brown in summer!",
+          extraFact: "Their fluffy tail wraps around their body like a blanket!",
+        },
+        {
+          id: "seal",
+          name: "Seal",
+          emoji: "🦭",
+          type: "Mammal",
+          habitat: "Arctic",
+          livesIn: "Cold oceans — Arctic and Antarctic coasts",
+          diet: "Fish, squid, and krill",
+          size: "From dog-sized to as long as a car (elephant seals)",
+          funFact: "Seals can hold their breath for up to 30 minutes underwater!",
+          extraFact: "Baby seals are called pups and have fluffy white fur!",
+        },
+        {
+          id: "snowy-owl",
+          name: "Snowy Owl",
+          emoji: "🦉",
+          type: "Bird",
+          habitat: "Arctic",
+          livesIn: "Arctic tundra — Canada, Alaska, Scandinavia, and Russia",
+          diet: "Lemmings, voles, and other small animals",
+          size: "About as big as a large cat — one of the biggest owls",
+          funFact: "Snowy owls hunt during the day because the Arctic has long daylight!",
+          extraFact: "Harry Potter's owl Hedwig was a snowy owl!",
+        },
+        {
+          id: "reindeer",
+          name: "Reindeer",
+          emoji: "🦌",
+          type: "Mammal",
+          habitat: "Arctic",
+          livesIn: "Arctic tundra — Scandinavia, Russia, Alaska, and Canada",
+          diet: "Lichens, moss, grass, and leaves",
+          size: "About as tall as a pony",
+          funFact: "Both male AND female reindeer grow antlers!",
+          extraFact: "Reindeer noses warm up cold air before it reaches their lungs!",
+        },
+        {
+          id: "camel",
+          name: "Camel",
+          emoji: "🐫",
+          type: "Mammal",
+          habitat: "Desert",
+          livesIn: "Deserts in Africa, the Middle East, and Central Asia",
+          diet: "Dry grass, thorny plants, and leaves",
+          size: "About as tall as a grown-up plus their raised head",
+          funFact: "Camels store fat in their hump — not water! The fat gives them energy.",
+          extraFact: "They can close their nostrils to keep out sandstorms!",
+        },
+        {
+          id: "scorpion",
+          name: "Scorpion",
+          emoji: "🦂",
+          type: "Arachnid",
+          habitat: "Desert",
+          livesIn: "Deserts worldwide — also forests and grasslands",
+          diet: "Insects, spiders, and other small creatures",
+          size: "From as small as a coin to as long as your hand",
+          funFact: "Scorpions glow under ultraviolet (black) light!",
+          extraFact: "Mother scorpions carry their babies on their back!",
+        },
+        {
+          id: "fennec-fox",
+          name: "Fennec Fox",
+          emoji: "🦊",
+          type: "Mammal",
+          habitat: "Desert",
+          livesIn: "Sahara Desert in North Africa",
+          diet: "Insects, small rodents, birds, and eggs",
+          size: "About as big as a chihuahua — the smallest fox!",
+          funFact: "Fennec foxes have huge ears that help them hear prey underground AND stay cool!",
+          extraFact: "Their ears can be half as long as their whole body!",
+        },
+        {
+          id: "rattlesnake",
+          name: "Rattlesnake",
+          emoji: "🐍",
+          type: "Reptile",
+          habitat: "Desert",
+          livesIn: "Deserts and grasslands in North and South America",
+          diet: "Mice, rats, birds, and lizards",
+          size: "From as long as a baseball bat to as long as a grown-up",
+          funFact: "The rattle on their tail is made of hollow segments that click together!",
+          extraFact: "They shake their rattle to warn predators: 'Stay back!'",
+        },
+        {
+          id: "roadrunner",
+          name: "Roadrunner",
+          emoji: "🐦",
+          type: "Bird",
+          habitat: "Desert",
+          livesIn: "Deserts in the southwestern United States and Mexico",
+          diet: "Insects, lizards, snakes, and small rodents",
+          size: "About as long as a ruler, with a long tail",
+          funFact: "Roadrunners can run up to 20 mph — they rarely fly!",
+          extraFact: "They can eat rattlesnakes — they're tough desert birds!",
+        },
+        {
+          id: "horned-lizard",
+          name: "Horned Lizard",
+          emoji: "🦎",
+          type: "Reptile",
+          habitat: "Desert",
+          livesIn: "Deserts in North and Central America",
+          diet: "Ants — they can eat thousands in one day!",
+          size: "About as long as your hand",
+          funFact: "Horned lizards can squirt blood from their eyes to scare predators!",
+          extraFact: "Their spiky body looks like a tiny dinosaur!",
+        },
+        {
+          id: "dog",
+          name: "Dog",
+          emoji: "🐕",
+          type: "Mammal",
+          habitat: "Farm",
+          livesIn: "Everywhere people live — originally from wolves",
+          diet: "Dog food, meat, and some plants — omnivores!",
+          size: "From tiny (Chihuahua) to huge (Great Dane)",
+          funFact: "Dogs can smell about 100,000 times better than humans!",
+          extraFact: "Dogs were the first animals humans ever domesticated!",
+        },
+        {
+          id: "cat",
+          name: "Cat",
+          emoji: "🐈",
+          type: "Mammal",
+          habitat: "Farm",
+          livesIn: "Everywhere people live — originally from wild cats",
+          diet: "Meat — cats are obligate carnivores",
+          size: "About as long as a ruler, plus tail",
+          funFact: "Cats spend about 70% of their lives sleeping!",
+          extraFact: "A cat's purr might help heal bones — scientists are still studying this!",
+        },
+        {
+          id: "horse",
+          name: "Horse",
+          emoji: "🐴",
+          type: "Mammal",
+          habitat: "Farm",
+          livesIn: "Farms and grasslands worldwide",
+          diet: "Grass, hay, oats, and carrots",
+          size: "About as tall as a basketball hoop at the head",
+          funFact: "Horses can sleep standing up OR lying down!",
+          extraFact: "A horse's teeth never stop growing!",
+        },
+        {
+          id: "rabbit",
+          name: "Rabbit",
+          emoji: "🐰",
+          type: "Mammal",
+          habitat: "Farm",
+          livesIn: "Fields, meadows, and farms worldwide",
+          diet: "Grass, clover, vegetables, and hay",
+          size: "From as small as a softball to as big as a cat",
+          funFact: "Rabbits' ears help them stay cool and hear danger from far away!",
+          extraFact: "A group of rabbits is called a fluffle!",
+        },
+        {
+          id: "chicken",
+          name: "Chicken",
+          emoji: "🐔",
+          type: "Bird",
+          habitat: "Farm",
+          livesIn: "Farms all over the world",
+          diet: "Seeds, insects, worms, and chicken feed",
+          size: "About as big as a cat",
+          funFact: "Chickens are the closest living relatives to T. rex dinosaurs!",
+          extraFact: "Hens can lay about one egg a day!",
+        },
+        {
+          id: "bee",
+          name: "Bee",
+          emoji: "🐝",
+          type: "Insect",
+          habitat: "Farm",
+          livesIn: "Everywhere with flowers — gardens, farms, and wild meadows",
+          diet: "Nectar and pollen from flowers",
+          size: "About as long as your thumbnail",
+          funFact: "Bees dance to tell other bees where to find flowers!",
+          extraFact: "One bee visits up to 5,000 flowers in a single day!",
+        },
+        {
+          id: "butterfly",
+          name: "Butterfly",
+          emoji: "🦋",
+          type: "Insect",
+          habitat: "Farm",
+          livesIn: "Gardens, meadows, and forests worldwide",
+          diet: "Nectar from flowers — they use a long tongue like a straw",
+          size: "Wingspan from thumb-sized to as wide as a dinner plate",
+          funFact: "Butterflies taste with their feet!",
+          extraFact: "They start life as caterpillars, then transform inside a chrysalis!",
+        },
+        {
+          id: "spider",
+          name: "Spider",
+          emoji: "🕷️",
+          type: "Arachnid",
+          habitat: "Farm",
+          livesIn: "Almost everywhere on Earth!",
+          diet: "Insects — they catch them in webs or hunt them",
+          size: "From pinhead-sized to dinner-plate sized (Goliath birdeater)",
+          funFact: "Spiders spin silk that's stronger than steel by weight!",
+          extraFact: "Most spiders are harmless to humans and eat pesky bugs!",
+        },
+        {
+          id: "frog",
+          name: "Frog",
+          emoji: "🐸",
+          type: "Amphibian",
+          habitat: "Farm",
+          livesIn: "Ponds, lakes, gardens, and wetlands worldwide",
+          diet: "Insects, worms, and small creatures",
+          size: "From as small as a fingernail to as big as a dinner plate",
+          funFact: "Frogs drink water through their skin — they don't need to sip!",
+          extraFact: "Some frogs can jump 20 times their body length!",
+        },
+        {
+          id: "bat",
+          name: "Bat",
+          emoji: "🦇",
+          type: "Mammal",
+          habitat: "Farm",
+          livesIn: "Caves, trees, and barns worldwide — active at night",
+          diet: "Insects, fruit, nectar, or fish — depends on the species",
+          size: "From as small as a bumblebee to wingspan as wide as a grown-up's arms",
+          funFact: "Bats are the only mammals that can truly fly!",
+          extraFact: "Bats eat tons of mosquitoes — they're nature's pest control!",
+        },
+        {
+          id: "bison",
+          name: "Bison",
+          emoji: "🦬",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "North America — prairies and grasslands",
+          diet: "Grass and prairie plants",
+          size: "About as tall as a grown-up and twice as long",
+          funFact: "Bison are the biggest land animals in North America!",
+          extraFact: "Their hump is made of muscle, not fat — it helps them plow through snow!",
+        },
+        {
+          id: "hippo",
+          name: "Hippo",
+          emoji: "🦛",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa — rivers and lakes in savannas",
+          diet: "Grass — they graze at night",
+          size: "As heavy as a small truck!",
+          funFact: "Hippos spend most of the day in water to stay cool!",
+          extraFact: "They can hold their breath underwater for up to 5 minutes!",
+        },
+        {
+          id: "wildebeest",
+          name: "Wildebeest",
+          emoji: "🐃",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa — open savannas in Kenya and Tanzania",
+          diet: "Grass and short plants",
+          size: "About as big as a large pony",
+          funFact: "Millions of wildebeest migrate together every year!",
+          extraFact: "Their migration is one of the biggest animal journeys on Earth!",
+        },
+        {
+          id: "flamingo",
+          name: "Flamingo",
+          emoji: "🦩",
+          type: "Bird",
+          habitat: "Grassland",
+          livesIn: "Africa, South America, and lakes worldwide",
+          diet: "Tiny shrimp and algae — they filter them from water",
+          size: "About as tall as a kitchen stool",
+          funFact: "Flamingos stand on one leg to save energy!",
+          extraFact: "Their pink color comes from the food they eat!",
+        },
+        {
+          id: "baboon",
+          name: "Baboon",
+          emoji: "🐒",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa and Arabia — savannas and rocky hills",
+          diet: "Fruit, seeds, insects, and sometimes small animals",
+          size: "About as big as a medium dog",
+          funFact: "Baboons live in big troops with dozens of members!",
+          extraFact: "They have cheek pouches to store food for later!",
+        },
+        {
+          id: "leopard",
+          name: "Leopard",
+          emoji: "🐆",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa and Asia — grasslands, forests, and mountains",
+          diet: "Meat — deer, monkeys, and antelope",
+          size: "About as long as a dining table",
+          funFact: "Leopards are great climbers and often hide food in trees!",
+          extraFact: "Every leopard has a unique spot pattern!",
+        },
+        {
+          id: "gazelle",
+          name: "Gazelle",
+          emoji: "🦌",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa and Asia — dry grasslands and deserts",
+          diet: "Grass, leaves, and shoots",
+          size: "About as tall as a kitchen counter",
+          funFact: "Gazelles can run up to 60 mph to escape predators!",
+          extraFact: "Some gazelles bounce in the air when they run — it's called stotting!",
+        },
+        {
+          id: "vulture",
+          name: "Vulture",
+          emoji: "🦅",
+          type: "Bird",
+          habitat: "Grassland",
+          livesIn: "Grasslands and deserts worldwide",
+          diet: "Carrion — animals that are already dead",
+          size: "Wingspan as wide as a grown-up's arms",
+          funFact: "Vultures help keep nature clean by eating dead animals!",
+          extraFact: "They have bald heads so feathers don't get messy!",
+        },
+        {
+          id: "coyote",
+          name: "Coyote",
+          emoji: "🐺",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "North America — prairies, deserts, and even cities",
+          diet: "Mice, rabbits, fruit, and insects",
+          size: "About as big as a medium dog",
+          funFact: "Coyotes can howl, yip, and bark to talk to each other!",
+          extraFact: "They're one of the most adaptable animals in North America!",
+        },
+        {
+          id: "mongoose",
+          name: "Mongoose",
+          emoji: "🐾",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa and Asia — grasslands and savannas",
+          diet: "Snakes, insects, eggs, and small animals",
+          size: "About as long as a ruler",
+          funFact: "Mongooses are famous for fighting snakes!",
+          extraFact: "They have special fur that helps protect them from snake bites!",
+        },
+        {
+          id: "badger",
+          name: "Badger",
+          emoji: "🦡",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Europe, Asia, and North America — grasslands and woods",
+          diet: "Worms, rabbits, insects, and roots",
+          size: "About as long as a house cat",
+          funFact: "Badgers dig huge underground homes called setts!",
+          extraFact: "A badger sett can have many rooms and tunnels!",
+        },
+        {
+          id: "prairie-dog",
+          name: "Prairie Dog",
+          emoji: "🐹",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "North America — prairies in the western United States",
+          diet: "Grass, roots, and seeds",
+          size: "About as long as your forearm",
+          funFact: "Prairie dogs live in huge underground towns!",
+          extraFact: "They bark warnings when danger is near!",
+        },
+        {
+          id: "jackal",
+          name: "Jackal",
+          emoji: "🐺",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa and Asia — savannas and grasslands",
+          diet: "Small animals, fruit, and leftovers from other hunters",
+          size: "About as big as a fox",
+          funFact: "Jackals often hunt in pairs or small family groups!",
+          extraFact: "They communicate with yips and howls at night!",
+        },
+        {
+          id: "secretary-bird",
+          name: "Secretary Bird",
+          emoji: "🦅",
+          type: "Bird",
+          habitat: "Grassland",
+          livesIn: "Africa — open grasslands and savannas",
+          diet: "Snakes, insects, and small animals — they stomp on prey!",
+          size: "About as tall as a child",
+          funFact: "Secretary birds hunt snakes by stomping on them with their feet!",
+          extraFact: "They have long eyelashes that look like fancy glasses!",
+        },
+        {
+          id: "beaver",
+          name: "Beaver",
+          emoji: "🦫",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "North America and Europe — forests near rivers and ponds",
+          diet: "Tree bark, leaves, and water plants",
+          size: "About as big as a small dog",
+          funFact: "Beavers build dams that create ponds for their homes!",
+          extraFact: "Their teeth never stop growing!",
+        },
+        {
+          id: "hedgehog",
+          name: "Hedgehog",
+          emoji: "🦔",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Europe, Asia, and Africa — forests, gardens, and meadows",
+          diet: "Insects, worms, slugs, and berries",
+          size: "About as big as a grapefruit",
+          funFact: "Hedgehogs roll into a spiky ball when scared!",
+          extraFact: "They have up to 7,000 spines on their back!",
+        },
+        {
+          id: "skunk",
+          name: "Skunk",
+          emoji: "🦨",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "North and South America — forests and fields",
+          diet: "Insects, mice, eggs, and berries",
+          size: "About as big as a house cat",
+          funFact: "Skunks spray a stinky liquid to scare away predators!",
+          extraFact: "They warn you first by stomping their feet!",
+        },
+        {
+          id: "lynx",
+          name: "Lynx",
+          emoji: "🐱",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "North America and Europe — cold forests",
+          diet: "Snowshoe hares, birds, and small deer",
+          size: "About as big as a large dog",
+          funFact: "Lynx have tufts of fur on their ears like little antennas!",
+          extraFact: "Their big paws work like snowshoes in winter!",
+        },
+        {
+          id: "eagle",
+          name: "Eagle",
+          emoji: "🦅",
+          type: "Bird",
+          habitat: "Forest",
+          livesIn: "Forests and mountains worldwide — near rivers and lakes",
+          diet: "Fish, rabbits, and other small animals",
+          size: "Wingspan as wide as a grown-up lying down",
+          funFact: "Eagles have amazing eyesight — they can spot prey from very far away!",
+          extraFact: "Bald eagles aren't bald — they have white feathers on their head!",
+        },
+        {
+          id: "woodpecker",
+          name: "Woodpecker",
+          emoji: "🪶",
+          type: "Bird",
+          habitat: "Forest",
+          livesIn: "Forests all over the world",
+          diet: "Insects hidden inside tree bark",
+          size: "From sparrow-sized to as big as a crow",
+          funFact: "Woodpeckers peck up to 20 times per second!",
+          extraFact: "Special skull bones protect their brain from all that pecking!",
+        },
+        {
+          id: "chipmunk",
+          name: "Chipmunk",
+          emoji: "🐿️",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "North America and Asia — forests and rocky areas",
+          diet: "Nuts, seeds, berries, and insects",
+          size: "About as long as your hand",
+          funFact: "Chipmunks stuff food in their cheek pouches!",
+          extraFact: "They can carry food equal to half their body weight!",
+        },
+        {
+          id: "wild-boar",
+          name: "Wild Boar",
+          emoji: "🐗",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Europe, Asia, and North Africa — forests and woodlands",
+          diet: "Roots, nuts, insects, and small animals",
+          size: "About as big as a large dog",
+          funFact: "Wild boars have tusks that keep growing their whole life!",
+          extraFact: "Pigs are descended from wild boars!",
+        },
+        {
+          id: "opossum",
+          name: "Opossum",
+          emoji: "🐾",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "North and South America — forests and suburbs",
+          diet: "Fruit, insects, mice, and garbage",
+          size: "About as big as a house cat",
+          funFact: "Opossums play dead to trick predators!",
+          extraFact: "They're the only marsupial in North America!",
+        },
+        {
+          id: "salamander",
+          name: "Salamander",
+          emoji: "🦎",
+          type: "Amphibian",
+          habitat: "Forest",
+          livesIn: "Forests worldwide — under logs and near streams",
+          diet: "Worms, insects, and small slugs",
+          size: "From as small as your thumb to as long as your arm",
+          funFact: "Some salamanders can regrow lost legs!",
+          extraFact: "They need moist skin to breathe!",
+        },
+        {
+          id: "wild-turkey",
+          name: "Wild Turkey",
+          emoji: "🦃",
+          type: "Bird",
+          habitat: "Forest",
+          livesIn: "North America — forests and fields",
+          diet: "Acorns, seeds, insects, and berries",
+          size: "About as big as a large dog",
+          funFact: "Wild turkeys can fly short distances up into trees!",
+          extraFact: "Male turkeys puff up and fan their tail feathers to impress females!",
+        },
+        {
+          id: "marten",
+          name: "Pine Marten",
+          emoji: "🐾",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Europe and North America — pine forests",
+          diet: "Squirrels, birds, berries, and eggs",
+          size: "About as long as a house cat",
+          funFact: "Pine martens are excellent climbers!",
+          extraFact: "They have beautiful golden-brown fur!",
+        },
+        {
+          id: "kingfisher",
+          name: "Kingfisher",
+          emoji: "🐦",
+          type: "Bird",
+          habitat: "Forest",
+          livesIn: "Forests near rivers and lakes worldwide",
+          diet: "Fish — they dive like arrows into the water",
+          size: "About as long as your hand",
+          funFact: "Kingfishers dive headfirst to catch fish!",
+          extraFact: "Many kingfishers have bright blue and orange feathers!",
+        },
+        {
+          id: "ferret",
+          name: "Ferret",
+          emoji: "🐾",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Originally Europe — forests and grasslands",
+          diet: "Rabbits, mice, and birds",
+          size: "About as long as a ruler",
+          funFact: "Ferrets can squeeze through very small holes!",
+          extraFact: "People have used ferrets to hunt rabbits for hundreds of years!",
+        },
+        {
+          id: "firefly",
+          name: "Firefly",
+          emoji: "✨",
+          type: "Insect",
+          habitat: "Forest",
+          livesIn: "Forests and meadows in warm parts of the world",
+          diet: "Nectar, pollen, and sometimes other insects",
+          size: "About as long as your fingernail",
+          funFact: "Fireflies glow to talk to each other!",
+          extraFact: "Their light is one of the most efficient lights in nature!",
+        },
+        {
+          id: "lemur",
+          name: "Lemur",
+          emoji: "🐒",
+          type: "Mammal",
+          habitat: "Jungle",
+          livesIn: "Madagascar — tropical forests",
+          diet: "Fruit, leaves, flowers, and insects",
+          size: "From as small as a mouse to as big as a cat",
+          funFact: "Lemurs only live on the island of Madagascar!",
+          extraFact: "Ring-tailed lemurs wave their stinky tails at rivals!",
+        },
+        {
+          id: "tapir",
+          name: "Tapir",
+          emoji: "🐾",
+          type: "Mammal",
+          habitat: "Jungle",
+          livesIn: "Central and South America and Southeast Asia — rainforests",
+          diet: "Leaves, fruit, and water plants",
+          size: "About as big as a small pony",
+          funFact: "Tapirs look like a mix of a pig and an elephant!",
+          extraFact: "Baby tapirs have spots and stripes for camouflage!",
+        },
+        {
+          id: "anteater",
+          name: "Anteater",
+          emoji: "🐾",
+          type: "Mammal",
+          habitat: "Jungle",
+          livesIn: "Central and South America — rainforests and grasslands",
+          diet: "Ants and termites — up to 30,000 a day!",
+          size: "From as small as a squirrel to as long as a car (giant anteater)",
+          funFact: "Anteaters have no teeth — they use a long sticky tongue!",
+          extraFact: "Their tongue can be 2 feet long!",
+        },
+        {
+          id: "armadillo",
+          name: "Armadillo",
+          emoji: "🐾",
+          type: "Mammal",
+          habitat: "Jungle",
+          livesIn: "Central and South America — forests and grasslands",
+          diet: "Insects, worms, and small animals",
+          size: "About as long as a house cat",
+          funFact: "Armadillos have armor made of bony plates!",
+          extraFact: "Some armadillos can roll into a ball for protection!",
+        },
+        {
+          id: "anaconda",
+          name: "Anaconda",
+          emoji: "🐍",
+          type: "Reptile",
+          habitat: "Jungle",
+          livesIn: "South America — swamps and rivers in the Amazon",
+          diet: "Fish, birds, and mammals — they squeeze their prey",
+          size: "Can grow as long as a school bus!",
+          funFact: "Anacondas are the heaviest snakes in the world!",
+          extraFact: "They spend lots of time in water!",
+        },
+        {
+          id: "crocodile",
+          name: "Crocodile",
+          emoji: "🐊",
+          type: "Reptile",
+          habitat: "Jungle",
+          livesIn: "Tropical rivers and swamps in Africa, Asia, and Australia",
+          diet: "Fish, birds, and mammals near the water",
+          size: "From as long as a grown-up to as long as a car",
+          funFact: "Crocodiles have been around since dinosaur times!",
+          extraFact: "They can hold their breath for over an hour!",
+        },
+        {
+          id: "howler-monkey",
+          name: "Howler Monkey",
+          emoji: "🐒",
+          type: "Mammal",
+          habitat: "Jungle",
+          livesIn: "Central and South America — rainforest treetops",
+          diet: "Leaves, fruit, flowers, and nuts",
+          size: "About as big as a house cat",
+          funFact: "Howler monkeys are one of the loudest animals on Earth!",
+          extraFact: "Their howls can be heard 3 miles away!",
+        },
+        {
+          id: "hummingbird",
+          name: "Hummingbird",
+          emoji: "🐦",
+          type: "Bird",
+          habitat: "Jungle",
+          livesIn: "The Americas — rainforests, gardens, and meadows",
+          diet: "Nectar from flowers and tiny insects",
+          size: "Some are as small as a bumblebee!",
+          funFact: "Hummingbirds can fly backwards!",
+          extraFact: "Their wings beat up to 80 times per second!",
+        },
+        {
+          id: "macaw",
+          name: "Macaw",
+          emoji: "🦜",
+          type: "Bird",
+          habitat: "Jungle",
+          livesIn: "Central and South America — rainforest canopy",
+          diet: "Nuts, seeds, fruit, and flowers",
+          size: "About as long as your arm with a big tail",
+          funFact: "Macaws are some of the most colorful birds in the world!",
+          extraFact: "They mate for life and fly together in pairs!",
+        },
+        {
+          id: "leaf-cutter-ant",
+          name: "Leaf-Cutter Ant",
+          emoji: "🐜",
+          type: "Insect",
+          habitat: "Jungle",
+          livesIn: "Central and South America — rainforests",
+          diet: "Fungus they grow on chewed-up leaves",
+          size: "Workers are about as long as a grain of rice",
+          funFact: "Leaf-cutter ants carry leaf pieces like tiny umbrellas!",
+          extraFact: "Their underground nests can be as big as a car!",
+        },
+        {
+          id: "okapi",
+          name: "Okapi",
+          emoji: "🦒",
+          type: "Mammal",
+          habitat: "Jungle",
+          livesIn: "Rainforests in the Democratic Republic of Congo",
+          diet: "Leaves, fruit, and shoots",
+          size: "About as tall as a pony",
+          funFact: "Okapis are related to giraffes but live in the forest!",
+          extraFact: "They have zebra-like stripes on their legs!",
+        },
+        {
+          id: "boa-constrictor",
+          name: "Boa Constrictor",
+          emoji: "🐍",
+          type: "Reptile",
+          habitat: "Jungle",
+          livesIn: "Central and South America — rainforests and deserts",
+          diet: "Birds, lizards, and small mammals",
+          size: "Can grow up to 13 feet long",
+          funFact: "Boas squeeze their prey but don't actually crush bones!",
+          extraFact: "They swallow prey whole!",
+        },
+        {
+          id: "tamarin",
+          name: "Tamarin",
+          emoji: "🐒",
+          type: "Mammal",
+          habitat: "Jungle",
+          livesIn: "Amazon rainforest in South America",
+          diet: "Fruit, insects, and tree sap",
+          size: "About as big as a squirrel",
+          funFact: "Tamarins often have fancy mustaches!",
+          extraFact: "Whole families help raise the babies!",
+        },
+        {
+          id: "tree-frog",
+          name: "Tree Frog",
+          emoji: "🐸",
+          type: "Amphibian",
+          habitat: "Jungle",
+          livesIn: "Rainforests in Central and South America",
+          diet: "Insects like flies and moths",
+          size: "About as long as your thumb",
+          funFact: "Many tree frogs are bright green or blue!",
+          extraFact: "Sticky toe pads help them climb smooth leaves!",
+        },
+        {
+          id: "peacock",
+          name: "Peacock",
+          emoji: "🦚",
+          type: "Bird",
+          habitat: "Jungle",
+          livesIn: "India and Sri Lanka — forests and grasslands",
+          diet: "Seeds, insects, and small snakes",
+          size: "About as long as a house cat, plus a huge tail",
+          funFact: "Male peacocks fan out colorful tail feathers to impress females!",
+          extraFact: "Only male peacocks have the big fancy tail!",
+        },
+        {
+          id: "orca",
+          name: "Orca",
+          emoji: "🐋",
+          type: "Mammal",
+          habitat: "Ocean",
+          livesIn: "Oceans worldwide — cold and warm waters",
+          diet: "Fish, seals, and even other whales",
+          size: "Up to 30 feet long — as long as a school bus!",
+          funFact: "Orcas are also called killer whales but they're actually dolphins!",
+          extraFact: "Each pod has its own special calls and hunting tricks!",
+        },
+        {
+          id: "manatee",
+          name: "Manatee",
+          emoji: "🐋",
+          type: "Mammal",
+          habitat: "Ocean",
+          livesIn: "Warm coastal waters — Florida, Caribbean, and West Africa",
+          diet: "Seagrass and water plants",
+          size: "About as long as a small car",
+          funFact: "Manatees are gentle giants sometimes called sea cows!",
+          extraFact: "They can eat up to a tenth of their body weight in plants each day!",
+        },
+        {
+          id: "starfish",
+          name: "Starfish",
+          emoji: "⭐",
+          type: "Invertebrate",
+          habitat: "Ocean",
+          livesIn: "Oceans worldwide — rocky shores and coral reefs",
+          diet: "Clams, mussels, and small snails",
+          size: "From coin-sized to as wide as a dinner plate",
+          funFact: "Starfish can regrow lost arms!",
+          extraFact: "They push their stomach out to digest food outside their body!",
+        },
+        {
+          id: "lobster",
+          name: "Lobster",
+          emoji: "🦞",
+          type: "Crustacean",
+          habitat: "Ocean",
+          livesIn: "Cold oceans — rocky sea floors on coasts",
+          diet: "Fish, clams, and other ocean bottom creatures",
+          size: "Body about as long as your forearm (not counting claws)",
+          funFact: "Lobsters can live over 100 years!",
+          extraFact: "They taste with their legs!",
+        },
+        {
+          id: "squid",
+          name: "Squid",
+          emoji: "🦑",
+          type: "Mollusk",
+          habitat: "Ocean",
+          livesIn: "Oceans worldwide — from surface to deep water",
+          diet: "Fish and shrimp",
+          size: "From hand-sized to as long as a bus (giant squid)",
+          funFact: "Squid shoot ink clouds to escape predators!",
+          extraFact: "They have three hearts!",
+        },
+        {
+          id: "pufferfish",
+          name: "Pufferfish",
+          emoji: "🐡",
+          type: "Fish",
+          habitat: "Ocean",
+          livesIn: "Tropical and temperate oceans — coral reefs and coasts",
+          diet: "Algae, small invertebrates, and shellfish",
+          size: "From golf-ball sized to as big as a football",
+          funFact: "Pufferfish puff up like a spiky balloon when scared!",
+          extraFact: "Some pufferfish are poisonous — so don't touch wild ones!",
+        },
+        {
+          id: "manta-ray",
+          name: "Manta Ray",
+          emoji: "🐟",
+          type: "Fish",
+          habitat: "Ocean",
+          livesIn: "Warm oceans — coral reefs and open water",
+          diet: "Tiny plankton filtered from the water",
+          size: "Wingspan as wide as a car!",
+          funFact: "Manta rays are gentle giants with no stinger!",
+          extraFact: "They sometimes leap out of the water!",
+        },
+        {
+          id: "narwhal",
+          name: "Narwhal",
+          emoji: "🦄",
+          type: "Mammal",
+          habitat: "Ocean",
+          livesIn: "Arctic Ocean — icy waters near Canada and Greenland",
+          diet: "Fish, squid, and shrimp",
+          size: "About as long as a small car",
+          funFact: "Narwhals are called the unicorns of the sea!",
+          extraFact: "Their 'horn' is actually a long tooth!",
+        },
+        {
+          id: "beluga",
+          name: "Beluga Whale",
+          emoji: "🐋",
+          type: "Mammal",
+          habitat: "Ocean",
+          livesIn: "Arctic and sub-Arctic oceans",
+          diet: "Fish, squid, and crustaceans",
+          size: "About as long as a small car",
+          funFact: "Belugas are white whales that can turn their heads!",
+          extraFact: "They're very vocal and sometimes called sea canaries!",
+        },
+        {
+          id: "swordfish",
+          name: "Swordfish",
+          emoji: "🐟",
+          type: "Fish",
+          habitat: "Ocean",
+          livesIn: "Oceans worldwide — warm and cool waters",
+          diet: "Fish and squid",
+          size: "Up to 15 feet long including the sword",
+          funFact: "Swordfish have a long flat bill like a sword!",
+          extraFact: "They can swim up to 60 mph!",
+        },
+        {
+          id: "shrimp",
+          name: "Shrimp",
+          emoji: "🦐",
+          type: "Crustacean",
+          habitat: "Ocean",
+          livesIn: "Oceans worldwide — from shallow reefs to the deep sea",
+          diet: "Plankton, algae, and tiny dead creatures",
+          size: "From as small as your fingernail to as long as your hand",
+          funFact: "There are thousands of species of shrimp!",
+          extraFact: "Some shrimp can make loud snapping sounds with their claws!",
+        },
+        {
+          id: "hermit-crab",
+          name: "Hermit Crab",
+          emoji: "🦀",
+          type: "Crustacean",
+          habitat: "Ocean",
+          livesIn: "Beaches and shallow oceans worldwide",
+          diet: "Algae, dead animals, and leftover food",
+          size: "From as small as a marble to as big as a baseball",
+          funFact: "Hermit crabs borrow empty shells to protect their soft bodies!",
+          extraFact: "They switch to bigger shells as they grow!",
+        },
+        {
+          id: "anglerfish",
+          name: "Anglerfish",
+          emoji: "🐟",
+          type: "Fish",
+          habitat: "Ocean",
+          livesIn: "Deep ocean — dark waters far below the surface",
+          diet: "Fish attracted to their glowing lure",
+          size: "From as big as a football to much larger ( females )",
+          funFact: "Anglerfish have a glowing lure on their head to catch prey!",
+          extraFact: "They live in the deep dark ocean where almost no light reaches!",
+        },
+        {
+          id: "musk-ox",
+          name: "Musk Ox",
+          emoji: "🐂",
+          type: "Mammal",
+          habitat: "Arctic",
+          livesIn: "Arctic tundra — Canada, Greenland, and Alaska",
+          diet: "Grass, moss, and Arctic plants",
+          size: "About as big as a cow",
+          funFact: "Musk oxen form a circle with babies in the middle when wolves attack!",
+          extraFact: "Their warm wool is called qiviut and is super soft!",
+        },
+        {
+          id: "puffin",
+          name: "Puffin",
+          emoji: "🐦",
+          type: "Bird",
+          habitat: "Arctic",
+          livesIn: "North Atlantic — cold coasts and cliffs",
+          diet: "Fish — they carry many in their beak at once",
+          size: "About as big as a pigeon",
+          funFact: "Puffins look like little clowns with colorful beaks!",
+          extraFact: "They can dive underwater to catch fish!",
+        },
+        {
+          id: "arctic-hare",
+          name: "Arctic Hare",
+          emoji: "🐰",
+          type: "Mammal",
+          habitat: "Arctic",
+          livesIn: "Arctic tundra — Canada and Greenland",
+          diet: "Twigs, bark, and Arctic plants",
+          size: "About as big as a house cat",
+          funFact: "Arctic hares turn white in winter to hide in the snow!",
+          extraFact: "They can run up to 40 mph!",
+        },
+        {
+          id: "lemming",
+          name: "Lemming",
+          emoji: "🐭",
+          type: "Mammal",
+          habitat: "Arctic",
+          livesIn: "Arctic tundra — Scandinavia, Canada, and Siberia",
+          diet: "Moss, grass, and Arctic plants",
+          size: "About as long as your hand",
+          funFact: "Lemming populations go up and down in big cycles!",
+          extraFact: "They're important food for Arctic foxes and owls!",
+        },
+        {
+          id: "ptarmigan",
+          name: "Ptarmigan",
+          emoji: "🐦",
+          type: "Bird",
+          habitat: "Arctic",
+          livesIn: "Arctic and mountain tundra — North America and Europe",
+          diet: "Leaves, buds, and berries",
+          size: "About as big as a chicken",
+          funFact: "Ptarmigans turn completely white in winter!",
+          extraFact: "Feathered feet work like snow boots!",
+        },
+        {
+          id: "komodo-dragon",
+          name: "Komodo Dragon",
+          emoji: "🦎",
+          type: "Reptile",
+          habitat: "Desert",
+          livesIn: "Indonesian islands — dry grasslands and forests",
+          diet: "Deer, pigs, and other large animals",
+          size: "Up to 10 feet long — the biggest lizard alive!",
+          funFact: "Komodo dragons are the largest lizards on Earth!",
+          extraFact: "They have a powerful bite and sharp claws!",
+        },
+        {
+          id: "desert-tortoise",
+          name: "Desert Tortoise",
+          emoji: "🐢",
+          type: "Reptile",
+          habitat: "Desert",
+          livesIn: "Deserts in the southwestern United States and Mexico",
+          diet: "Grass, wildflowers, and cactus fruit",
+          size: "Shell about as long as a ruler",
+          funFact: "Desert tortoises can live over 80 years!",
+          extraFact: "They spend up to 95% of their life in burrows!",
+        },
+        {
+          id: "tarantula",
+          name: "Tarantula",
+          emoji: "🕷️",
+          type: "Arachnid",
+          habitat: "Desert",
+          livesIn: "Deserts and forests in the Americas",
+          diet: "Insects, lizards, and small mice",
+          size: "Leg span as wide as a dinner plate (biggest species)",
+          funFact: "Tarantulas can flick itchy hairs from their belly at enemies!",
+          extraFact: "Most tarantulas are harmless to humans!",
+        },
+        {
+          id: "oryx",
+          name: "Oryx",
+          emoji: "🦌",
+          type: "Mammal",
+          habitat: "Desert",
+          livesIn: "African and Arabian deserts",
+          diet: "Grass, roots, and desert plants",
+          size: "About as tall as a pony",
+          funFact: "Oryx can survive without drinking water for a long time!",
+          extraFact: "Their long straight horns look like spears!",
+        },
+        {
+          id: "kangaroo-rat",
+          name: "Kangaroo Rat",
+          emoji: "🐭",
+          type: "Mammal",
+          habitat: "Desert",
+          livesIn: "Deserts in the southwestern United States",
+          diet: "Seeds — they store them in cheek pouches",
+          size: "About as long as your hand",
+          funFact: "Kangaroo rats hop like tiny kangaroos!",
+          extraFact: "They almost never need to drink water!",
+        },
+        {
+          id: "gila-monster",
+          name: "Gila Monster",
+          emoji: "🦎",
+          type: "Reptile",
+          habitat: "Desert",
+          livesIn: "Deserts in the southwestern United States and Mexico",
+          diet: "Eggs, baby mammals, and frogs",
+          size: "About as long as your forearm",
+          funFact: "Gila monsters are one of the few venomous lizards!",
+          extraFact: "They move slowly and spend lots of time underground!",
+        },
+        {
+          id: "sand-cat",
+          name: "Sand Cat",
+          emoji: "🐱",
+          type: "Mammal",
+          habitat: "Desert",
+          livesIn: "Sahara and Arabian deserts",
+          diet: "Rodents, birds, and reptiles",
+          size: "About as big as a house cat",
+          funFact: "Sand cats have furry paws that protect them from hot sand!",
+          extraFact: "They can survive in places with almost no water!",
+        },
+        {
+          id: "jerboa",
+          name: "Jerboa",
+          emoji: "🐭",
+          type: "Mammal",
+          habitat: "Desert",
+          livesIn: "Deserts in Africa and Asia",
+          diet: "Seeds and desert plants",
+          size: "Body as small as a mouse with long hopping legs",
+          funFact: "Jerboas look like tiny kangaroos with big ears!",
+          extraFact: "They mostly come out at night to avoid the hot sun!",
+        },
+        {
+          id: "pig",
+          name: "Pig",
+          emoji: "🐷",
+          type: "Mammal",
+          habitat: "Farm",
+          livesIn: "Farms worldwide",
+          diet: "Grains, vegetables, and kitchen scraps",
+          size: "From small pot-bellied pigs to as big as a grown-up",
+          funFact: "Pigs are very smart — as smart as dogs!",
+          extraFact: "They love to roll in mud to stay cool!",
+        },
+        {
+          id: "cow",
+          name: "Cow",
+          emoji: "🐄",
+          type: "Mammal",
+          habitat: "Farm",
+          livesIn: "Farms and grasslands worldwide",
+          diet: "Grass, hay, and grains",
+          size: "About as heavy as a small car",
+          funFact: "Cows have best friends and get stressed when separated!",
+          extraFact: "They chew cud — they re-chew food to digest grass!",
+        },
+        {
+          id: "sheep",
+          name: "Sheep",
+          emoji: "🐑",
+          type: "Mammal",
+          habitat: "Farm",
+          livesIn: "Farms and hills worldwide",
+          diet: "Grass and hay",
+          size: "About as big as a large dog",
+          funFact: "Sheep recognize each other's faces and voices!",
+          extraFact: "Their wool keeps growing and gets sheared for yarn!",
+        },
+        {
+          id: "goat",
+          name: "Goat",
+          emoji: "🐐",
+          type: "Mammal",
+          habitat: "Farm",
+          livesIn: "Farms and mountains worldwide",
+          diet: "Grass, leaves, and almost anything they can reach!",
+          size: "About as big as a medium dog",
+          funFact: "Goats are great climbers and can balance on tiny ledges!",
+          extraFact: "They have rectangular pupils!",
+        },
+        {
+          id: "duck",
+          name: "Duck",
+          emoji: "🦆",
+          type: "Bird",
+          habitat: "Farm",
+          livesIn: "Farms, ponds, and lakes worldwide",
+          diet: "Plants, insects, and grains",
+          size: "About as big as a large cat",
+          funFact: "Ducklings follow the first moving thing they see!",
+          extraFact: "Ducks waterproof their feathers with oil from a special gland!",
+        },
+        {
+          id: "goose",
+          name: "Goose",
+          emoji: "🪿",
+          type: "Bird",
+          habitat: "Farm",
+          livesIn: "Farms, lakes, and wetlands worldwide",
+          diet: "Grass, grains, and water plants",
+          size: "About as big as a large dog",
+          funFact: "Geese fly in a V shape to save energy!",
+          extraFact: "They're very protective of their nests!",
+        },
+        {
+          id: "turkey",
+          name: "Turkey",
+          emoji: "🦃",
+          type: "Bird",
+          habitat: "Farm",
+          livesIn: "Farms and forests in North America",
+          diet: "Seeds, insects, and berries",
+          size: "About as big as a large dog",
+          funFact: "Turkeys can run up to 25 mph!",
+          extraFact: "Male turkeys gobble to attract females!",
+        },
+        {
+          id: "donkey",
+          name: "Donkey",
+          emoji: "🫏",
+          type: "Mammal",
+          habitat: "Farm",
+          livesIn: "Farms and dry lands worldwide",
+          diet: "Grass, hay, and grains",
+          size: "About as tall as a pony",
+          funFact: "Donkeys are strong and can carry heavy loads!",
+          extraFact: "They bray with a loud hee-haw sound!",
+        },
+        {
+          id: "llama",
+          name: "Llama",
+          emoji: "🦙",
+          type: "Mammal",
+          habitat: "Farm",
+          livesIn: "South American mountains and farms worldwide",
+          diet: "Grass, hay, and grains",
+          size: "About as tall as a grown-up's chest",
+          funFact: "Llamas spit when they're annoyed!",
+          extraFact: "They were used as pack animals in the Andes mountains!",
+        },
+        {
+          id: "alpaca",
+          name: "Alpaca",
+          emoji: "🦙",
+          type: "Mammal",
+          habitat: "Farm",
+          livesIn: "South American mountains and farms worldwide",
+          diet: "Grass and hay",
+          size: "A bit smaller than a llama",
+          funFact: "Alpaca wool is super soft and warm!",
+          extraFact: "They hum to communicate with each other!",
+        },
+        {
+          id: "guinea-pig",
+          name: "Guinea Pig",
+          emoji: "🐹",
+          type: "Mammal",
+          habitat: "Farm",
+          livesIn: "Originally South America — now pets and farms worldwide",
+          diet: "Hay, vegetables, and guinea pig pellets",
+          size: "About as long as your hand",
+          funFact: "Guinea pigs aren't pigs and they're not from Guinea!",
+          extraFact: "They wheek loudly when they're excited!",
+        },
+        {
+          id: "hamster",
+          name: "Hamster",
+          emoji: "🐹",
+          type: "Mammal",
+          habitat: "Farm",
+          livesIn: "Originally deserts in Syria — now popular pets",
+          diet: "Seeds, grains, and vegetables",
+          size: "About as long as your palm",
+          funFact: "Hamsters store food in their cheek pouches!",
+          extraFact: "They're mostly active at night!",
+        },
+        {
+          id: "mouse",
+          name: "Mouse",
+          emoji: "🐭",
+          type: "Mammal",
+          habitat: "Farm",
+          livesIn: "Almost everywhere — fields, barns, and houses",
+          diet: "Seeds, grains, and crumbs",
+          size: "About as long as your thumb",
+          funFact: "Mice have excellent hearing and smell!",
+          extraFact: "They use their whiskers to feel their way in the dark!",
+        },
+        {
+          id: "ladybug",
+          name: "Ladybug",
+          emoji: "🐞",
+          type: "Insect",
+          habitat: "Farm",
+          livesIn: "Gardens and farms worldwide",
+          diet: "Aphids — tiny plant pests",
+          size: "About as small as your fingernail",
+          funFact: "Ladybugs are gardeners' friends because they eat pests!",
+          extraFact: "The number of spots varies by species!",
+        },
+        {
+          id: "ant",
+          name: "Ant",
+          emoji: "🐜",
+          type: "Insect",
+          habitat: "Farm",
+          livesIn: "Almost everywhere on Earth!",
+          diet: "Seeds, other insects, and sweet liquids",
+          size: "From as tiny as a pinhead to about an inch long",
+          funFact: "Ants can lift many times their own body weight!",
+          extraFact: "Some ant colonies have millions of members!",
+        },
+        {
+          id: "grasshopper",
+          name: "Grasshopper",
+          emoji: "🦗",
+          type: "Insect",
+          habitat: "Farm",
+          livesIn: "Fields, meadows, and farms worldwide",
+          diet: "Grass and leaves",
+          size: "About as long as your thumb",
+          funFact: "Grasshoppers can jump 20 times their body length!",
+          extraFact: "They rub their legs together to chirp!",
+        },
+        {
+          id: "snail",
+          name: "Snail",
+          emoji: "🐌",
+          type: "Mollusk",
+          habitat: "Farm",
+          livesIn: "Gardens, farms, and wet places worldwide",
+          diet: "Leaves, vegetables, and decaying plants",
+          size: "From as small as a pea to as big as your fist",
+          funFact: "Snails carry their home on their back!",
+          extraFact: "They make slime so they can glide along!",
+        },
+        {
+          id: "earthworm",
+          name: "Earthworm",
+          emoji: "🪱",
+          type: "Invertebrate",
+          habitat: "Farm",
+          livesIn: "Soil in gardens and farms worldwide",
+          diet: "Dead leaves and organic matter in the soil",
+          size: "From as short as an inch to as long as a ruler",
+          funFact: "Earthworms help soil stay healthy for plants!",
+          extraFact: "They breathe through their skin!",
+        },
+        {
+          id: "rooster",
+          name: "Rooster",
+          emoji: "🐓",
+          type: "Bird",
+          habitat: "Farm",
+          livesIn: "Farms worldwide",
+          diet: "Grains, insects, and seeds",
+          size: "About as big as a cat",
+          funFact: "Roosters crow to mark their territory at dawn!",
+          extraFact: "They protect hens and warn the flock of danger!",
+        },
+        {
+          id: "dragonfly",
+          name: "Dragonfly",
+          emoji: "🪲",
+          type: "Insect",
+          habitat: "Farm",
+          livesIn: "Near ponds, streams, and gardens worldwide",
+          diet: "Mosquitoes, flies, and other flying insects",
+          size: "Wingspan from thumb-sized to as wide as your hand",
+          funFact: "Dragonflies have been around since dinosaur times!",
+          extraFact: "They can fly in any direction — even backwards!",
+        },
+        {
+          id: "koala",
+          name: "Koala",
+          emoji: "🐨",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Eucalyptus forests in Australia",
+          diet: "Eucalyptus leaves — almost only eucalyptus!",
+          size: "About as big as a small dog",
+          funFact: "Koalas sleep up to 20 hours a day!",
+          extraFact: "Baby koalas are called joeys and live in a pouch!",
+        },
+        {
+          id: "kangaroo",
+          name: "Kangaroo",
+          emoji: "🦘",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Australia — grasslands and open country",
+          diet: "Grass and plants",
+          size: "From as tall as a grown-up (red kangaroo) to dog-sized",
+          funFact: "Kangaroos hop on powerful back legs and can't walk backwards!",
+          extraFact: "Baby kangaroos are called joeys!",
+        },
+        {
+          id: "platypus",
+          name: "Platypus",
+          emoji: "🦆",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Streams and rivers in eastern Australia",
+          diet: "Worms, insects, and shellfish from river bottoms",
+          size: "About as long as a house cat",
+          funFact: "Platypuses lay eggs even though they're mammals!",
+          extraFact: "Males have venomous spurs on their ankles!",
+        },
+        {
+          id: "panda",
+          name: "Giant Panda",
+          emoji: "🐼",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Mountain bamboo forests in China",
+          diet: "Bamboo — they eat up to 40 pounds a day!",
+          size: "About as big as a black bear",
+          funFact: "Giant pandas spend most of their day eating bamboo!",
+          extraFact: "Their black and white fur helps them hide in snow and shade!",
+        },
+        {
+          id: "blue-whale",
+          name: "Blue Whale",
+          emoji: "🐋",
+          type: "Mammal",
+          habitat: "Ocean",
+          livesIn: "Oceans worldwide — migrates between cold and warm waters",
+          diet: "Krill — tiny shrimp-like creatures by the millions",
+          size: "Up to 100 feet long — the biggest animal ever!",
+          funFact: "A blue whale's tongue can weigh as much as an elephant!",
+          extraFact: "Their heart is the size of a small car!",
+        },
+        {
+          id: "sea-otter",
+          name: "Sea Otter",
+          emoji: "🦦",
+          type: "Mammal",
+          habitat: "Ocean",
+          livesIn: "Pacific Ocean — kelp forests along the coast",
+          diet: "Sea urchins, clams, crabs, and fish",
+          size: "About as long as a house cat",
+          funFact: "Sea otters float on their backs and use tools to open shells!",
+          extraFact: "They hold hands while sleeping so they don't drift apart!",
+        },
+        {
+          id: "snow-leopard",
+          name: "Snow Leopard",
+          emoji: "🐆",
+          type: "Mammal",
+          habitat: "Arctic",
+          livesIn: "Mountain ranges in Central Asia — cold high places",
+          diet: "Wild sheep, goats, and hares",
+          size: "About as long as a grown-up lying down",
+          funFact: "Snow leopards can't roar — they chuff and purr instead!",
+          extraFact: "Their long tail helps them balance on cliffs!",
+        },
+        {
+          id: "emu",
+          name: "Emu",
+          emoji: "🪶",
+          type: "Bird",
+          habitat: "Grassland",
+          livesIn: "Australia — open grasslands and forests",
+          diet: "Plants, seeds, insects, and fruit",
+          size: "About as tall as a grown-up",
+          funFact: "Emus are the second-tallest birds in the world!",
+          extraFact: "Dad emus sit on the eggs for about 8 weeks!",
+        },
+        {
+          id: "wombat",
+          name: "Wombat",
+          emoji: "🐾",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Forests and grasslands in Australia",
+          diet: "Grass, roots, and bark",
+          size: "About as big as a medium dog",
+          funFact: "Wombats poop in cube shapes!",
+          extraFact: "They dig burrows with their strong claws!",
+        },
+        {
+          id: "toucanet",
+          name: "Toucanet",
+          emoji: "🦜",
+          type: "Bird",
+          habitat: "Jungle",
+          livesIn: "Central and South American rainforests",
+          diet: "Fruit and insects",
+          size: "Smaller than a big toucan — about crow-sized",
+          funFact: "Toucanets are smaller cousins of toucans!",
+          extraFact: "They nest in holes in trees!",
+        },
+        {
+          id: "electric-eel",
+          name: "Electric Eel",
+          emoji: "⚡",
+          type: "Fish",
+          habitat: "Jungle",
+          livesIn: "Amazon River and muddy South American waters",
+          diet: "Fish and invertebrates",
+          size: "Up to 8 feet long",
+          funFact: "Electric eels can zap prey with electricity!",
+          extraFact: "They're not true eels — they're knifefish!",
+        },
+        {
+          id: "pelican",
+          name: "Pelican",
+          emoji: "🐦",
+          type: "Bird",
+          habitat: "Ocean",
+          livesIn: "Coasts and lakes worldwide",
+          diet: "Fish — scooped up in their big pouch",
+          size: "Wingspan as wide as a grown-up's arms",
+          funFact: "Pelicans have a stretchy pouch under their bill!",
+          extraFact: "They often fish together in groups!",
+        },
+        {
+          id: "yak",
+          name: "Yak",
+          emoji: "🐂",
+          type: "Mammal",
+          habitat: "Arctic",
+          livesIn: "High mountains in Tibet and Central Asia",
+          diet: "Grass, herbs, and mountain plants",
+          size: "About as big as a cow",
+          funFact: "Yaks have thick shaggy coats for freezing mountain air!",
+          extraFact: "People in the Himalayas use yaks for milk and carrying loads!",
+        },
+        {
+          id: "quail",
+          name: "Quail",
+          emoji: "🐦",
+          type: "Bird",
+          habitat: "Farm",
+          livesIn: "Farms, fields, and grasslands worldwide",
+          diet: "Seeds, insects, and grains",
+          size: "About as big as your hand",
+          funFact: "Quail eggs are tiny and speckled!",
+          extraFact: "They often travel in groups called coveys!",
+        },
+        {
+          id: "condor",
+          name: "Condor",
+          emoji: "🦅",
+          type: "Bird",
+          habitat: "Desert",
+          livesIn: "Mountains and deserts in the Americas",
+          diet: "Carrion — animals that are already dead",
+          size: "Wingspan up to 10 feet — one of the biggest flying birds!",
+          funFact: "Condors ride warm air currents to soar for hours!",
+          extraFact: "California condors were saved from extinction by scientists!",
+        },
+        {
+          id: "bowhead-whale",
+          name: "Bowhead Whale",
+          emoji: "🐋",
+          type: "Mammal",
+          habitat: "Arctic",
+          livesIn: "Arctic Ocean — icy waters near Alaska and Canada",
+          diet: "Tiny crustaceans filtered from the water",
+          size: "Up to 60 feet long — longer than a bus!",
+          funFact: "Bowhead whales may live over 200 years!",
+          extraFact: "They use their thick skull to break through sea ice!",
+        },
+        {
+          id: "stoat",
+          name: "Stoat",
+          emoji: "🐾",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Northern forests and tundra worldwide",
+          diet: "Mice, rabbits, and birds",
+          size: "About as long as a ruler",
+          funFact: "Stoats turn white in winter and are then called ermines!",
+          extraFact: "They're fast hunters despite their small size!",
+        },
+        {
+          id: "gecko",
+          name: "Gecko",
+          emoji: "🦎",
+          type: "Reptile",
+          habitat: "Desert",
+          livesIn: "Warm deserts and tropical places worldwide",
+          diet: "Insects and spiders",
+          size: "From thumb-sized to as long as your hand",
+          funFact: "Geckos can stick to walls and walk on ceilings!",
+          extraFact: "Some geckos chirp to talk to each other!",
+        },
+        {
+          id: "ibex",
+          name: "Ibex",
+          emoji: "🐐",
+          type: "Mammal",
+          habitat: "Desert",
+          livesIn: "Steep mountains in Europe, Africa, and Asia",
+          diet: "Grass, leaves, and mountain plants",
+          size: "About as big as a goat",
+          funFact: "Ibex climb near-vertical cliffs!",
+          extraFact: "Their curved horns can be over 3 feet long!",
+        },
+        {
+          id: "monitor-lizard",
+          name: "Monitor Lizard",
+          emoji: "🦎",
+          type: "Reptile",
+          habitat: "Jungle",
+          livesIn: "Africa, Asia, and Australia — forests and savannas",
+          diet: "Insects, eggs, fish, and small mammals",
+          size: "From arm-length to over 6 feet long",
+          funFact: "Monitor lizards flick their forked tongue to smell!",
+          extraFact: "The Komodo dragon is the biggest monitor lizard!",
+        },
+        {
+          id: "rat",
+          name: "Rat",
+          emoji: "🐀",
+          type: "Mammal",
+          habitat: "Farm",
+          livesIn: "Almost everywhere — cities, farms, and sewers",
+          diet: "Grains, fruit, insects, and almost anything edible",
+          size: "About as long as your hand plus tail",
+          funFact: "Rats are very smart and can learn tricks!",
+          extraFact: "Their tails help them balance when climbing!",
+        },
+        {
+          id: "cockatoo",
+          name: "Cockatoo",
+          emoji: "🦜",
+          type: "Bird",
+          habitat: "Forest",
+          livesIn: "Australia and nearby islands — forests and woodlands",
+          diet: "Seeds, nuts, fruit, and insects",
+          size: "About as big as a crow",
+          funFact: "Cockatoos have a feathery crest on top of their head!",
+          extraFact: "They can live over 70 years!",
+        },
+        {
+          id: "cassowary",
+          name: "Cassowary",
+          emoji: "🪶",
+          type: "Bird",
+          habitat: "Jungle",
+          livesIn: "Rainforests in New Guinea and Australia",
+          diet: "Fruit that falls on the forest floor",
+          size: "About as tall as a grown-up!",
+          funFact: "Cassowaries are one of the closest living relatives to dinosaurs!",
+          extraFact: "They have a hard helmet-like crest on their head!",
+        },
+        {
+          id: "dingo",
+          name: "Dingo",
+          emoji: "🐕",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Australia — deserts, grasslands, and forests",
+          diet: "Rabbits, kangaroos, and other small animals",
+          size: "About as big as a medium dog",
+          funFact: "Dingoes are wild dogs found only in Australia!",
+          extraFact: "They howl but bark less than pet dogs!",
+        },
+        {
+          id: "tasmanian-devil",
+          name: "Tasmanian Devil",
+          emoji: "🐾",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Tasmania, Australia — forests and scrublands",
+          diet: "Carrion and small live animals",
+          size: "About as big as a small dog",
+          funFact: "Tasmanian devils make loud screaming growls!",
+          extraFact: "They have one of the strongest bites for their size!",
+        },
+        {
+          id: "echidna",
+          name: "Echidna",
+          emoji: "🦔",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Australia and New Guinea — forests and deserts",
+          diet: "Ants and termites — slurped up with a long tongue",
+          size: "About as long as a house cat",
+          funFact: "Echidnas lay eggs even though they're mammals!",
+          extraFact: "They're covered in spines like a porcupine!",
+        },
+        {
+          id: "serval",
+          name: "Serval",
+          emoji: "🐱",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa — savannas and wetlands",
+          diet: "Rodents, birds, and frogs",
+          size: "About as tall as a medium dog with long legs",
+          funFact: "Servals have the longest legs of any cat compared to body size!",
+          extraFact: "They can jump 10 feet straight up to catch birds!",
+        },
+        {
+          id: "ocelot",
+          name: "Ocelot",
+          emoji: "🐆",
+          type: "Mammal",
+          habitat: "Jungle",
+          livesIn: "Central and South America — rainforests and scrub",
+          diet: "Small mammals, birds, and reptiles",
+          size: "About as big as a large house cat",
+          funFact: "Ocelots have beautiful spotted fur!",
+          extraFact: "They hunt mostly at night!",
+        },
+        {
+          id: "elk",
+          name: "Elk",
+          emoji: "🦌",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "North America and eastern Asia — forests and meadows",
+          diet: "Grass, leaves, bark, and twigs",
+          size: "Bulls can weigh as much as a small car!",
+          funFact: "Male elk bugle loudly during mating season!",
+          extraFact: "Their antlers can spread wider than you are tall!",
+        },
+        {
+          id: "bighorn-sheep",
+          name: "Bighorn Sheep",
+          emoji: "🐑",
+          type: "Mammal",
+          habitat: "Desert",
+          livesIn: "Mountains and deserts in western North America",
+          diet: "Grass, shrubs, and desert plants",
+          size: "About as big as a large dog",
+          funFact: "Bighorn rams crash horns in spectacular head-butting fights!",
+          extraFact: "They can climb incredibly steep rocky cliffs!",
+        },
+        {
+          id: "salmon",
+          name: "Salmon",
+          emoji: "🐟",
+          type: "Fish",
+          habitat: "Ocean",
+          livesIn: "Oceans and rivers in North America, Europe, and Asia",
+          diet: "Plankton when young, then smaller fish and shrimp",
+          size: "From hand-sized to as long as your arm",
+          funFact: "Salmon swim upstream to the same river where they were born!",
+          extraFact: "Their color can turn bright red or pink during spawning!",
+        },
+        {
+          id: "tuna",
+          name: "Tuna",
+          emoji: "🐟",
+          type: "Fish",
+          habitat: "Ocean",
+          livesIn: "Open oceans worldwide — warm and temperate waters",
+          diet: "Fish, squid, and crustaceans",
+          size: "From as long as your arm to as long as a car (bluefin)",
+          funFact: "Tuna are warm-blooded fish that swim super fast!",
+          extraFact: "Some tuna can swim over 40 mph!",
+        },
+        {
+          id: "sea-lion",
+          name: "Sea Lion",
+          emoji: "🦭",
+          type: "Mammal",
+          habitat: "Ocean",
+          livesIn: "Coasts in the Pacific Ocean and other temperate waters",
+          diet: "Fish and squid",
+          size: "From dog-sized to as long as a small car",
+          funFact: "Sea lions can walk on land using their flippers!",
+          extraFact: "They're very vocal and bark loudly!",
+        },
+        {
+          id: "river-otter",
+          name: "River Otter",
+          emoji: "🦦",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Rivers and lakes in North America, Europe, and Asia",
+          diet: "Fish, crayfish, frogs, and birds",
+          size: "About as long as a house cat",
+          funFact: "River otters slide on their bellies in snow and mud for fun!",
+          extraFact: "They hold hands while sleeping so they don't float away!",
+        },
+        {
+          id: "weasel",
+          name: "Weasel",
+          emoji: "🐾",
+          type: "Mammal",
+          habitat: "Forest",
+          livesIn: "Forests and fields worldwide",
+          diet: "Mice, voles, rabbits, and birds",
+          size: "One of the smallest carnivores — longer than your hand",
+          funFact: "Weasels can squeeze through holes as small as a quarter!",
+          extraFact: "They're fierce hunters much bigger than themselves!",
+        },
+        {
+          id: "piranha",
+          name: "Piranha",
+          emoji: "🐟",
+          type: "Fish",
+          habitat: "Jungle",
+          livesIn: "Amazon River and South American rivers",
+          diet: "Fish, insects, seeds, and fruit",
+          size: "About as long as your hand",
+          funFact: "Piranhas have sharp teeth and strong jaws!",
+          extraFact: "They often travel in groups called shoals!",
+        },
+        {
+          id: "axolotl",
+          name: "Axolotl",
+          emoji: "🦎",
+          type: "Amphibian",
+          habitat: "Jungle",
+          livesIn: "Lakes near Mexico City — originally",
+          diet: "Worms, insects, and small fish",
+          size: "About as long as your hand",
+          funFact: "Axolotls can regrow lost legs, tails, and even parts of their heart!",
+          extraFact: "They keep their gills and stay aquatic their whole life!",
+        },
+        {
+          id: "iguana",
+          name: "Iguana",
+          emoji: "🦎",
+          type: "Reptile",
+          habitat: "Jungle",
+          livesIn: "Central and South America — rainforests and coasts",
+          diet: "Leaves, flowers, and fruit",
+          size: "Up to 6 feet long including the tail",
+          funFact: "Green iguanas can drop their tail to escape predators!",
+          extraFact: "They bask in the sun to warm up!",
+        },
+        {
+          id: "python",
+          name: "Python",
+          emoji: "🐍",
+          type: "Reptile",
+          habitat: "Jungle",
+          livesIn: "Africa, Asia, and Australia — jungles and grasslands",
+          diet: "Birds and mammals — swallowed whole",
+          size: "From as long as your arm to over 20 feet (reticulated python)",
+          funFact: "Pythons squeeze their prey but have no venom!",
+          extraFact: "Some pythons can go months without eating after a big meal!",
+        },
+        {
+          id: "king-cobra",
+          name: "King Cobra",
+          emoji: "🐍",
+          type: "Reptile",
+          habitat: "Jungle",
+          livesIn: "Forests in India and Southeast Asia",
+          diet: "Other snakes — including venomous ones!",
+          size: "Up to 18 feet — the longest venomous snake!",
+          funFact: "King cobras can raise a third of their body off the ground!",
+          extraFact: "They build nests and guard their eggs!",
+        },
+        {
+          id: "pangolin",
+          name: "Pangolin",
+          emoji: "🐾",
+          type: "Mammal",
+          habitat: "Jungle",
+          livesIn: "Africa and Asia — forests and grasslands",
+          diet: "Ants and termites — licked up with a sticky tongue",
+          size: "From cat-sized to as long as a large dog",
+          funFact: "Pangolins are covered in scales like armor!",
+          extraFact: "They roll into a ball when scared!",
+        },
+        {
+          id: "aardvark",
+          name: "Aardvark",
+          emoji: "🐾",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa — savannas and grasslands",
+          diet: "Ants and termites dug from mounds",
+          size: "About as long as a large dog",
+          funFact: "Aardvarks dig burrows with powerful claws!",
+          extraFact: "Their name means 'earth pig' in Afrikaans!",
+        },
+        {
+          id: "impala",
+          name: "Impala",
+          emoji: "🦌",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa — savannas and woodlands",
+          diet: "Grass and leaves",
+          size: "About as tall as a kitchen counter",
+          funFact: "Impala can leap 10 feet high and 30 feet forward!",
+          extraFact: "Only males have long curved horns!",
+        },
+        {
+          id: "caracal",
+          name: "Caracal",
+          emoji: "🐱",
+          type: "Mammal",
+          habitat: "Desert",
+          livesIn: "Africa and the Middle East — deserts and dry grasslands",
+          diet: "Birds, rodents, and small antelope",
+          size: "About as big as a medium dog",
+          funFact: "Caracals have tall tufted ears like satellite dishes!",
+          extraFact: "They can leap high to snatch birds from the air!",
+        },
+        {
+          id: "honey-badger",
+          name: "Honey Badger",
+          emoji: "🦡",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Africa and Asia — savannas and dry forests",
+          diet: "Honey, insects, snakes, and small mammals",
+          size: "About as long as a house cat",
+          funFact: "Honey badgers are famously fearless!",
+          extraFact: "Their skin is loose so they can twist around when grabbed!",
+        },
+        {
+          id: "civet",
+          name: "Civet",
+          emoji: "🐾",
+          type: "Mammal",
+          habitat: "Jungle",
+          livesIn: "Africa and Asia — tropical forests",
+          diet: "Fruit, insects, and small animals",
+          size: "About as big as a house cat",
+          funFact: "Civets are mostly active at night!",
+          extraFact: "Some civets help spread seeds through the forest!",
+        },
+        {
+          id: "barracuda",
+          name: "Barracuda",
+          emoji: "🐟",
+          type: "Fish",
+          habitat: "Ocean",
+          livesIn: "Tropical and subtropical oceans — coral reefs and coasts",
+          diet: "Fish — they chase prey with sharp teeth",
+          size: "From as long as your arm to over 6 feet",
+          funFact: "Barracudas have a fierce underbite full of teeth!",
+          extraFact: "They can swim in quick bursts to ambush prey!",
+        },
+        {
+          id: "swan",
+          name: "Swan",
+          emoji: "🦢",
+          type: "Bird",
+          habitat: "Ocean",
+          livesIn: "Lakes, rivers, and coasts in Europe, North America, and Asia",
+          diet: "Water plants, small fish, and insects",
+          size: "About as long as a large dog with a long neck",
+          funFact: "Swans usually mate for life!",
+          extraFact: "Baby swans are called cygnets!",
+        },
+        {
+          id: "crow",
+          name: "Crow",
+          emoji: "🐦‍⬛",
+          type: "Bird",
+          habitat: "Farm",
+          livesIn: "Almost everywhere — cities, farms, and forests",
+          diet: "Seeds, fruit, insects, and leftover food they find",
+          size: "About as long as a ruler",
+          funFact: "Crows are very smart and can solve puzzles!",
+          extraFact: "They can remember human faces!",
+        },
+        {
+          id: "praying-mantis",
+          name: "Praying Mantis",
+          emoji: "🦗",
+          type: "Insect",
+          habitat: "Jungle",
+          livesIn: "Warm places worldwide — gardens, forests, and grasslands",
+          diet: "Flies, crickets, and other insects",
+          size: "From thumb-sized to about as long as your hand",
+          funFact: "Praying mantises hold their front legs together like they are praying!",
+          extraFact: "They can turn their head almost all the way around!",
+        },
+        {
+          id: "luna-moth",
+          name: "Luna Moth",
+          emoji: "🦋",
+          type: "Insect",
+          habitat: "Forest",
+          livesIn: "Forests in North America",
+          diet: "Adults do not eat — caterpillars eat leaves from trees like birch and walnut",
+          size: "Wingspan as wide as your hand — one of the biggest moths in North America",
+          funFact: "Luna moths have beautiful green wings!",
+          extraFact: "Adult luna moths only live about one week!",
+        },
+        {
+          id: "quokka",
+          name: "Quokka",
+          emoji: "🐾",
+          type: "Mammal",
+          habitat: "Grassland",
+          livesIn: "Small islands off the coast of Western Australia",
+          diet: "Grass, leaves, and roots",
+          size: "About as big as a house cat",
+          funFact: "Quokkas are often called the happiest animals because they look like they are smiling!",
+          extraFact: "They carry their babies in a pouch like kangaroos!",
+        },
+        {
+          id: "gibbon",
+          name: "Gibbon",
+          emoji: "🐒",
+          type: "Mammal",
+          habitat: "Jungle",
+          livesIn: "Rainforests in Southeast Asia — high in the trees",
+          diet: "Fruit, leaves, and insects",
+          size: "About as long as your arm — small apes",
+          funFact: "Gibbons swing through trees using their long arms!",
+          extraFact: "They sing loud morning songs to mark their territory!",
+        },
+        {
+          id: "goldfish",
+          name: "Goldfish",
+          emoji: "🐠",
+          type: "Fish",
+          habitat: "Farm",
+          livesIn: "Ponds, lakes, and fish bowls around the world",
+          diet: "Plants, tiny bugs, and fish food",
+          size: "From as small as your thumb to as long as your forearm",
+          funFact: "Goldfish can remember things for months!",
+          extraFact: "They were first kept as pets in ancient China over 1,000 years ago!",
+        },
+      ];
+
+      const BASE_ANIMALS = ANIMALS;
+      const STORAGE_PENDING = "wildWonders_pending";
+      const STORAGE_APPROVED = "wildWonders_approved";
+      const REVIEW_PIN = "wildwonders";
+      const ANIMAL_TYPES = [
+        "Mammal",
+        "Bird",
+        "Reptile",
+        "Amphibian",
+        "Fish",
+        "Insect",
+        "Crustacean",
+        "Mollusk",
+        "Arachnid",
+        "Invertebrate",
+      ];
+
+      const BLOCKED_WORDS = [
+        "stupid",
+        "dumb",
+        "hate",
+        "kill you",
+        "deadly weapon",
+        "sexy",
+        "nude",
+        "poop joke",
+        "fart joke",
+        "bad word",
+      ];
+
+      const ANIMAL_TOPIC_WORDS = [
+        "animal",
+        "mammal",
+        "bird",
+        "fish",
+        "reptile",
+        "insect",
+        "eat",
+        "food",
+        "live",
+        "lives",
+        "habitat",
+        "forest",
+        "ocean",
+        "jungle",
+        "grass",
+        "desert",
+        "farm",
+        "arctic",
+        "hunt",
+        "fly",
+        "swim",
+        "run",
+        "tail",
+        "fur",
+        "feather",
+        "scale",
+        "egg",
+        "paw",
+        "wing",
+        "fin",
+        "horn",
+        "nest",
+        "pack",
+        "herd",
+        "predator",
+        "prey",
+        "nocturnal",
+        "species",
+      ];
+
+      let selectedHabitat = "All";
+      let searchQuery = "";
+      let reviewUnlocked = false;
+
+      const homeScreen = document.getElementById("home-screen");
+      const detailScreen = document.getElementById("detail-screen");
+      const addScreen = document.getElementById("add-screen");
+      const successScreen = document.getElementById("success-screen");
+      const reviewScreen = document.getElementById("review-screen");
+      const animalCountEl = document.getElementById("animal-count");
+      const searchInput = document.getElementById("search-input");
+      const randomBtn = document.getElementById("random-btn");
+      const addAnimalBtn = document.getElementById("add-animal-btn");
+      const filterGrid = document.getElementById("filter-grid");
+      const animalGrid = document.getElementById("animal-grid");
+      const resultsInfo = document.getElementById("results-info");
+      const emptyState = document.getElementById("empty-state");
+      const backBtn = document.getElementById("back-btn");
+      const addBackBtn = document.getElementById("add-back-btn");
+      const addCancelBtn = document.getElementById("add-cancel-btn");
+      const addAnimalForm = document.getElementById("add-animal-form");
+      const successMessageEl = document.getElementById("success-message");
+      const formErrorBox = document.getElementById("form-error-box");
+      const successHomeBtn = document.getElementById("success-home-btn");
+      const reviewLink = document.getElementById("review-link");
+      const reviewBackBtn = document.getElementById("review-back-btn");
+      const reviewUnlockBtn = document.getElementById("review-unlock-btn");
+      const reviewPinInput = document.getElementById("review-pin");
+      const pinPanel = document.getElementById("pin-panel");
+      const reviewPanel = document.getElementById("review-panel");
+      const reviewList = document.getElementById("review-list");
+      const reviewCount = document.getElementById("review-count");
+      const emptyReview = document.getElementById("empty-review");
+
+      let memoryPending = null;
+      let memoryApproved = null;
+      let storageWarningShown = false;
+
+      function loadPending() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_PENDING) || "[]");
+        } catch {
+          return memoryPending ? [...memoryPending] : [];
+        }
+      }
+
+      function savePending(list) {
+        try {
+          localStorage.setItem(STORAGE_PENDING, JSON.stringify(list));
+          memoryPending = null;
+        } catch {
+          memoryPending = [...list];
+          if (!storageWarningShown) {
+            storageWarningShown = true;
+            console.warn("Could not save to browser storage. Submissions will work until you close this tab.");
+          }
+        }
+        updateReviewLinkLabel();
+      }
+
+      function loadApproved() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_APPROVED) || "[]");
+        } catch {
+          return memoryApproved ? [...memoryApproved] : [];
+        }
+      }
+
+      function saveApproved(list) {
+        try {
+          localStorage.setItem(STORAGE_APPROVED, JSON.stringify(list));
+          memoryApproved = null;
+        } catch {
+          memoryApproved = [...list];
+        }
+        updateAnimalCount();
+        renderGrid();
+      }
+
+      function getAllAnimals() {
+        return [...BASE_ANIMALS, ...loadApproved()];
+      }
+
+      function slugify(text) {
+        return text
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "");
+      }
+
+      function hideAllScreens() {
+        document.querySelectorAll(".screen").forEach((screen) => {
+          screen.classList.remove("active");
+        });
+      }
+
+      function showScreen(screen) {
+        hideAllScreens();
+        screen.classList.add("active");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function updateAnimalCount() {
+        animalCountEl.textContent = `You're exploring ${getAllAnimals().length} amazing animals!`;
+      }
+
+      function updateReviewLinkLabel() {
+        const pendingCount = loadPending().length;
+        reviewLink.textContent =
+          pendingCount > 0
+            ? `Review submissions (${pendingCount} waiting)`
+            : "Review submissions (grown-ups)";
+      }
+
+      function hasEmoji(text) {
+        if (!text || !text.trim()) return false;
+        try {
+          return /\p{Extended_Pictographic}/u.test(text);
+        } catch {
+          return /[\uD800-\uDBFF][\uDC00-\uDFFF]/.test(text);
+        }
+      }
+
+      function validateSubmission(data) {
+        const errors = [];
+        const combined = Object.values(data).join(" ").toLowerCase();
+        const minDetailLength = 8;
+
+        if (!data.name || data.name.trim().length < 2) {
+          errors.push("Please enter an animal name with at least 2 letters.");
+        }
+
+        if (!hasEmoji(data.emoji)) {
+          errors.push("Please pick one emoji for your animal.");
+        }
+
+        if (!data.type || !ANIMAL_TYPES.includes(data.type)) {
+          errors.push("Please choose a valid animal type.");
+        }
+
+        if (!data.habitat || !HABITATS.slice(1).includes(data.habitat)) {
+          errors.push("Please choose where the animal lives.");
+        }
+
+        ["livesIn", "diet", "size", "funFact", "extraFact"].forEach((field) => {
+          const labels = {
+            livesIn: "where they live",
+            diet: "what they eat",
+            size: "how big they are",
+            funFact: "fun fact",
+            extraFact: "did you know fact",
+          };
+          if (!data[field] || data[field].trim().length < minDetailLength) {
+            errors.push(
+              `Please write a bit more in "${labels[field]}" (at least ${minDetailLength} letters).`
+            );
+          }
+        });
+
+        if (/https?:\/\//i.test(combined) || /www\./i.test(combined)) {
+          errors.push("Please do not include website links.");
+        }
+
+        if (/(.)\1{5,}/.test(combined)) {
+          errors.push("Please avoid repeated letters like 'aaaaaaa'.");
+        }
+
+        for (const word of BLOCKED_WORDS) {
+          if (combined.includes(word)) {
+            errors.push("Please use kind, kid-friendly words only.");
+            break;
+          }
+        }
+
+        const nameWords = data.name.toLowerCase().split(/\s+/);
+        const mentionsAnimalName = nameWords.some((word) => {
+          return word.length > 2 && combined.includes(word);
+        });
+
+        const mentionsAnimalTopic = ANIMAL_TOPIC_WORDS.some((word) =>
+          combined.includes(word)
+        );
+
+        if (!mentionsAnimalName && !mentionsAnimalTopic) {
+          errors.push(
+            "Your facts should clearly be about an animal — where it lives, what it eats, or how it behaves."
+          );
+        }
+
+        const duplicate = getAllAnimals().some(
+          (animal) => animal.name.toLowerCase() === data.name.trim().toLowerCase()
+        );
+        if (duplicate) {
+          errors.push("That animal is already in the encyclopedia!");
+        }
+
+        const pendingDuplicate = loadPending().some(
+          (entry) => entry.name.toLowerCase() === data.name.trim().toLowerCase()
+        );
+        if (pendingDuplicate) {
+          errors.push("That animal is already waiting for review.");
+        }
+
+        return errors;
+      }
+
+      function getFormData() {
+        return {
+          name: document.getElementById("add-name").value.trim(),
+          emoji: document.getElementById("add-emoji").value.trim(),
+          type: document.getElementById("add-type").value,
+          habitat: document.getElementById("add-habitat").value,
+          livesIn: document.getElementById("add-lives-in").value.trim(),
+          diet: document.getElementById("add-diet").value.trim(),
+          size: document.getElementById("add-size").value.trim(),
+          funFact: document.getElementById("add-fun-fact").value.trim(),
+          extraFact: document.getElementById("add-extra-fact").value.trim(),
+          author: document.getElementById("add-author").value.trim(),
+        };
+      }
+
+      function queueForManualReview(data) {
+        const submission = {
+          id: `custom-${Date.now()}-${slugify(data.name)}`,
+          ...data,
+          submittedAt: new Date().toISOString(),
+          status: "pending",
+        };
+
+        const pending = loadPending();
+        pending.push(submission);
+        savePending(pending);
+      }
+
+      function showFormErrors(errors) {
+        formErrorBox.hidden = false;
+        formErrorBox.innerHTML = `<strong>Please fix these before sending:</strong><ul>${errors
+          .map((error) => `<li>${escapeHtml(error)}</li>`)
+          .join("")}</ul>`;
+        formErrorBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      function escapeHtml(text) {
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function clearFormErrors() {
+        formErrorBox.hidden = true;
+        formErrorBox.innerHTML = "";
+      }
+
+      function handleAddSubmit(event) {
+        event.preventDefault();
+        clearFormErrors();
+
+        try {
+          const data = getFormData();
+          const errors = validateSubmission(data);
+          if (errors.length > 0) {
+            showFormErrors(errors);
+            return;
+          }
+
+          queueForManualReview(data);
+          addAnimalForm.reset();
+          showScreen(successScreen);
+        } catch (error) {
+          console.error(error);
+          showFormErrors([
+            "Something went wrong while sending your animal. Please try again.",
+          ]);
+        }
+      }
+
+      function approveSubmission(submissionId) {
+        const pending = loadPending();
+        const index = pending.findIndex((entry) => entry.id === submissionId);
+        if (index === -1) return;
+
+        const approvedEntry = {
+          ...pending[index],
+          custom: true,
+          approvedAt: new Date().toISOString(),
+        };
+        delete approvedEntry.status;
+
+        pending.splice(index, 1);
+        savePending(pending);
+
+        const approved = loadApproved();
+        approved.push(approvedEntry);
+        saveApproved(approved);
+        renderReviewList();
+      }
+
+      function rejectSubmission(submissionId) {
+        const pending = loadPending().filter((entry) => entry.id !== submissionId);
+        savePending(pending);
+        renderReviewList();
+      }
+
+      function renderReviewList() {
+        const pending = loadPending();
+        reviewList.innerHTML = "";
+
+        if (!reviewUnlocked) {
+          reviewPanel.hidden = true;
+          pinPanel.hidden = false;
+          return;
+        }
+
+        pinPanel.hidden = true;
+        reviewPanel.hidden = false;
+        reviewCount.textContent = `${pending.length} submission${
+          pending.length === 1 ? "" : "s"
+        } waiting`;
+
+        if (pending.length === 0) {
+          emptyReview.hidden = false;
+          return;
+        }
+
+        emptyReview.hidden = true;
+
+        pending.forEach((entry) => {
+          const item = document.createElement("article");
+          item.className = "review-item";
+          item.innerHTML = `
+            <div class="review-item-header">
+              <span class="review-item-emoji">${entry.emoji}</span>
+              <div>
+                <p class="review-item-name">${entry.name}</p>
+                <p class="review-meta">${entry.type} · ${entry.habitat}${
+                  entry.author ? ` · by ${entry.author}` : ""
+                }</p>
+              </div>
+            </div>
+            <div class="review-facts">
+              <p><strong>Fun fact:</strong> ${entry.funFact}</p>
+              <p><strong>Did you know?:</strong> ${entry.extraFact}</p>
+              <p><strong>Where they live:</strong> ${entry.livesIn}</p>
+              <p><strong>What they eat:</strong> ${entry.diet}</p>
+              <p><strong>How big:</strong> ${entry.size}</p>
+            </div>
+            <div class="review-actions">
+              <button type="button" class="approve-btn" data-id="${entry.id}">Approve</button>
+              <button type="button" class="reject-btn" data-id="${entry.id}">Reject</button>
+            </div>
+          `;
+
+          item.querySelector(".approve-btn").addEventListener("click", () => {
+            approveSubmission(entry.id);
+          });
+          item.querySelector(".reject-btn").addEventListener("click", () => {
+            rejectSubmission(entry.id);
+          });
+
+          reviewList.appendChild(item);
+        });
+      }
+
+      function unlockReview() {
+        if (reviewPinInput.value.trim() === REVIEW_PIN) {
+          reviewUnlocked = true;
+          renderReviewList();
+          return;
+        }
+
+        alert("Wrong password. Check the backwards hint under Review submissions.");
+      }
+
+      updateAnimalCount();
+      updateReviewLinkLabel();
+
+      HABITATS.forEach((habitat) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className =
+          "filter-pill" + (habitat === selectedHabitat ? " active" : "");
+        btn.textContent = habitat;
+        btn.addEventListener("click", () => {
+          selectedHabitat = habitat;
+          document.querySelectorAll(".filter-pill").forEach((pill) => {
+            pill.classList.toggle("active", pill.textContent === habitat);
+          });
+          renderGrid();
+        });
+        filterGrid.appendChild(btn);
+      });
+
+      function getFilteredAnimals() {
+        return getAllAnimals().filter((animal) => {
+          const matchesHabitat =
+            selectedHabitat === "All" || animal.habitat === selectedHabitat;
+          const matchesSearch =
+            !searchQuery ||
+            animal.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            animal.type.toLowerCase().includes(searchQuery.toLowerCase());
+          return matchesHabitat && matchesSearch;
+        });
+      }
+
+      function habitatClass(habitat) {
+        return habitat.toLowerCase();
+      }
+
+      function renderGrid() {
+        const filtered = getFilteredAnimals();
+        animalGrid.innerHTML = "";
+
+        if (filtered.length === 0) {
+          emptyState.hidden = false;
+          animalGrid.hidden = true;
+          resultsInfo.textContent = "";
+          return;
+        }
+
+        emptyState.hidden = true;
+        animalGrid.hidden = false;
+
+        const habitatLabel =
+          selectedHabitat === "All" ? "all habitats" : selectedHabitat.toLowerCase();
+        resultsInfo.textContent = searchQuery
+          ? `Showing ${filtered.length} animal${filtered.length === 1 ? "" : "s"} matching "${searchQuery}"`
+          : `Showing ${filtered.length} animal${filtered.length === 1 ? "" : "s"} in ${habitatLabel}`;
+
+        filtered.forEach((animal) => {
+          const card = document.createElement("button");
+          card.type = "button";
+          card.className = "animal-card";
+          card.innerHTML = `
+            <div class="card-emoji">${animal.emoji}</div>
+            <p class="card-name">${animal.name}</p>
+            <span class="habitat-badge ${habitatClass(animal.habitat)}">${animal.habitat}</span>
+            ${animal.custom ? '<span class="custom-badge">Your addition</span>' : ""}
+          `;
+          card.addEventListener("click", () => showDetail(animal.id));
+          animalGrid.appendChild(card);
+        });
+      }
+
+      function showDetail(id) {
+        const animal = getAllAnimals().find((a) => a.id === id);
+        if (!animal) return;
+
+        document.getElementById("detail-emoji").textContent = animal.emoji;
+        document.getElementById("detail-name").textContent = animal.name;
+        document.getElementById("detail-type").textContent = animal.custom
+          ? `${animal.type} · Lives in ${animal.habitat} · Added by a kid!`
+          : `${animal.type} · Lives in ${animal.habitat}`;
+        document.getElementById("detail-fun-fact").textContent = animal.funFact;
+        document.getElementById("detail-extra-fact").textContent =
+          animal.extraFact;
+        document.getElementById("detail-lives-in").textContent = animal.livesIn;
+        document.getElementById("detail-diet").textContent = animal.diet;
+        document.getElementById("detail-size").textContent = animal.size;
+
+        showScreen(detailScreen);
+      }
+
+      function showHome() {
+        clearFormErrors();
+        showScreen(homeScreen);
+      }
+
+      function showAddForm() {
+        clearFormErrors();
+        showScreen(addScreen);
+      }
+
+      function showReviewScreen() {
+        reviewUnlocked = false;
+        reviewPinInput.value = "";
+        renderReviewList();
+        showScreen(reviewScreen);
+      }
+
+      searchInput.addEventListener("input", (e) => {
+        searchQuery = e.target.value.trim();
+        renderGrid();
+      });
+
+      randomBtn.addEventListener("click", () => {
+        const filtered = getFilteredAnimals();
+        const pool = filtered.length > 0 ? filtered : getAllAnimals();
+        const random = pool[Math.floor(Math.random() * pool.length)];
+        showDetail(random.id);
+      });
+
+      backBtn.addEventListener("click", showHome);
+      addAnimalBtn.addEventListener("click", showAddForm);
+      addBackBtn.addEventListener("click", showHome);
+      addCancelBtn.addEventListener("click", showHome);
+      addAnimalForm.addEventListener("submit", handleAddSubmit);
+      successHomeBtn.addEventListener("click", showHome);
+      reviewLink.addEventListener("click", showReviewScreen);
+      reviewBackBtn.addEventListener("click", showHome);
+      reviewUnlockBtn.addEventListener("click", unlockReview);
+      reviewPinInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") unlockReview();
+      });
+
+      renderGrid();
+    </script>
+  </body>
+</html>
