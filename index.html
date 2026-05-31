@@ -504,8 +504,8 @@
         margin-bottom: 0.75rem;
       }
 
-      .review-item-emoji {
-        font-size: 2.5rem;
+      .review-item-emoji svg {
+        display: block;
       }
 
       .review-item-name {
@@ -534,7 +534,8 @@
 
       .approve-btn,
       .reject-btn,
-      .delete-btn {
+      .delete-btn,
+      .edit-btn {
         padding: 0.55rem 1rem;
         border-radius: 999px;
         font-family: inherit;
@@ -547,6 +548,12 @@
       .approve-btn {
         background: var(--forest);
         color: white;
+      }
+
+      .edit-btn {
+        background: rgba(26, 107, 138, 0.12);
+        color: var(--ocean);
+        border: 1px solid rgba(26, 107, 138, 0.25);
       }
 
       .reject-btn,
@@ -1239,6 +1246,95 @@
           </div>
         </section>
 
+        <!-- EDIT ANIMAL SCREEN (Admin) -->
+        <section id="edit-screen" class="screen">
+          <button type="button" class="back-btn" id="edit-back-btn">
+            ← Back to admin
+          </button>
+
+          <div class="form-card">
+            <h2 class="form-title">Edit Animal</h2>
+            <p class="form-intro" id="edit-animal-label">
+              Update this animal's facts. Changes save on this device.
+            </p>
+
+            <form id="edit-animal-form" class="form-grid" novalidate>
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="edit-name">Animal name</label>
+                  <input id="edit-name" name="name" required maxlength="40" />
+                </div>
+                <div class="form-field">
+                  <label for="edit-emoji">Emoji</label>
+                  <input id="edit-emoji" name="emoji" maxlength="10" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="edit-type">Animal type</label>
+                  <select id="edit-type" name="type" required>
+                    <option value="Mammal">Mammal</option>
+                    <option value="Bird">Bird</option>
+                    <option value="Reptile">Reptile</option>
+                    <option value="Amphibian">Amphibian</option>
+                    <option value="Fish">Fish</option>
+                    <option value="Insect">Insect</option>
+                    <option value="Crustacean">Crustacean</option>
+                    <option value="Mollusk">Mollusk</option>
+                    <option value="Arachnid">Arachnid</option>
+                    <option value="Invertebrate">Invertebrate</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label for="edit-habitat">Habitat</label>
+                  <select id="edit-habitat" name="habitat" required>
+                    <option value="Grassland">Grassland</option>
+                    <option value="Forest">Forest</option>
+                    <option value="Jungle">Jungle</option>
+                    <option value="Ocean">Ocean</option>
+                    <option value="Arctic">Arctic</option>
+                    <option value="Desert">Desert</option>
+                    <option value="Farm">Farm</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label for="edit-lives-in">Where they live</label>
+                <textarea id="edit-lives-in" name="livesIn" required maxlength="200"></textarea>
+              </div>
+
+              <div class="form-field">
+                <label for="edit-diet">What they eat</label>
+                <textarea id="edit-diet" name="diet" required maxlength="200"></textarea>
+              </div>
+
+              <div class="form-field">
+                <label for="edit-size">How big they are</label>
+                <input id="edit-size" name="size" required maxlength="120" />
+              </div>
+
+              <div class="form-field">
+                <label for="edit-fun-fact">Fun fact</label>
+                <textarea id="edit-fun-fact" name="funFact" required maxlength="200"></textarea>
+              </div>
+
+              <div class="form-field">
+                <label for="edit-extra-fact">Did you know?</label>
+                <textarea id="edit-extra-fact" name="extraFact" required maxlength="200"></textarea>
+              </div>
+
+              <div id="edit-form-error-box" class="form-error" hidden></div>
+
+              <div class="form-actions">
+                <button type="submit" class="submit-btn">Save changes</button>
+                <button type="button" class="cancel-btn" id="edit-cancel-btn">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
         <!-- SUBMIT SUCCESS SCREEN -->
         <section id="success-screen" class="screen">
           <div class="form-card success-card">
@@ -1301,10 +1397,10 @@
           </button>
 
           <div class="form-card">
-            <h2 class="form-title">Review Submissions</h2>
+            <h2 class="form-title">Admin</h2>
             <p class="form-intro">
               Check each animal for appropriate language, true facts, and animal
-              topics. Approve good ones or reject ones that don't fit.
+              topics. Approve good ones, edit any animal, or reject ones that don't fit.
             </p>
 
             <div id="pin-panel" class="pin-panel">
@@ -1349,6 +1445,21 @@
               <div class="empty-review" id="empty-read-feedback" hidden>
                 No read feedback yet.
               </div>
+
+              <h3 class="admin-section-title">Edit animals</h3>
+              <p class="form-intro">
+                Search any animal and update its name, emoji, or facts.
+              </p>
+              <div class="form-field">
+                <label for="edit-animal-search">Search animals</label>
+                <input
+                  id="edit-animal-search"
+                  type="search"
+                  placeholder="Lion, penguin, anaconda..."
+                />
+              </div>
+              <p class="results-info" id="edit-animal-count"></p>
+              <div class="review-list" id="edit-animal-list"></div>
             </div>
           </div>
         </section>
@@ -1360,7 +1471,7 @@
               💬 Send feedback
             </button>
             <button type="button" class="footer-link" id="review-link">
-              Review submissions (Admin)
+              Admin
             </button>
           </div>
         </footer>
@@ -3866,12 +3977,49 @@
           funFact: "Goldfish can remember things for months!",
           extraFact: "They were first kept as pets in ancient China over 1,000 years ago!",
         },
+        {
+          id: "shoebill",
+          name: "Shoebill",
+          emoji: "🦤",
+          type: "Bird",
+          habitat: "Jungle",
+          livesIn: "Swamps and wetlands in East Africa — Uganda and South Sudan",
+          diet: "Fish, frogs, and small reptiles",
+          size: "About as tall as a child — up to 5 feet with huge wings",
+          funFact: "Shoebills have a giant shoe-shaped bill that looks like a dinosaur beak!",
+          extraFact: "They stand very still in the water, then strike fast to catch prey!",
+        },
+        {
+          id: "leafy-seadragon",
+          name: "Leafy Seadragon",
+          emoji: "🐉",
+          type: "Fish",
+          habitat: "Ocean",
+          livesIn: "Coastal waters off southern and western Australia",
+          diet: "Tiny shrimp and sea lice they suck up through their long snout",
+          size: "About as long as your forearm",
+          funFact: "Leafy seadragons look just like floating seaweed!",
+          extraFact: "The leafy fronds on their body are for camouflage, not for swimming!",
+        },
+        {
+          id: "frilled-lizard",
+          name: "Frilled Lizard",
+          emoji: "🦎",
+          type: "Reptile",
+          habitat: "Desert",
+          livesIn: "Woodlands and savannas in northern Australia and New Guinea",
+          diet: "Insects, spiders, and small lizards",
+          size: "About as long as your arm, plus a big neck frill",
+          funFact: "Frilled lizards run on their hind legs like tiny dinosaurs!",
+          extraFact: "When scared, they open a big frill around their neck to look huge!",
+        },
       ];
 
       const BASE_ANIMALS = ANIMALS;
       const STORAGE_PENDING = "wildWonders_pending";
       const STORAGE_APPROVED = "wildWonders_approved";
       const STORAGE_FEEDBACK = "wildWonders_feedback";
+      const STORAGE_EDITS = "wildWonders_edits";
       const FEEDBACK_EMAIL = "pmolinasamayoa@icloud.com";
       const REVIEW_PIN = "wildwonders";
       const ANIMAL_TYPES = [
@@ -3944,6 +4092,8 @@
       let selectedHabitat = "All";
       let searchQuery = "";
       let reviewUnlocked = false;
+      let editingAnimalId = null;
+      let editAnimalSearchQuery = "";
       let activeTranslateLang = "";
       let translateSortTimer = null;
 
@@ -3953,6 +4103,7 @@
       const successScreen = document.getElementById("success-screen");
       const feedbackScreen = document.getElementById("feedback-screen");
       const reviewScreen = document.getElementById("review-screen");
+      const editScreen = document.getElementById("edit-screen");
       const animalCountEl = document.getElementById("animal-count");
       const searchInput = document.getElementById("search-input");
       const randomBtn = document.getElementById("random-btn");
@@ -3991,10 +4142,19 @@
       const feedbackReadList = document.getElementById("feedback-read-list");
       const feedbackReadCount = document.getElementById("feedback-read-count");
       const emptyReadFeedback = document.getElementById("empty-read-feedback");
+      const editAnimalSearchInput = document.getElementById("edit-animal-search");
+      const editAnimalList = document.getElementById("edit-animal-list");
+      const editAnimalCount = document.getElementById("edit-animal-count");
+      const editAnimalForm = document.getElementById("edit-animal-form");
+      const editFormErrorBox = document.getElementById("edit-form-error-box");
+      const editBackBtn = document.getElementById("edit-back-btn");
+      const editCancelBtn = document.getElementById("edit-cancel-btn");
+      const editAnimalLabel = document.getElementById("edit-animal-label");
 
       let memoryPending = null;
       let memoryApproved = null;
       let memoryFeedback = null;
+      let memoryEdits = null;
       let storageWarningShown = false;
 
       function loadPending() {
@@ -4056,8 +4216,48 @@
         updateReviewLinkLabel();
       }
 
+      function loadEdits() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_EDITS) || "{}");
+        } catch {
+          return memoryEdits ? { ...memoryEdits } : {};
+        }
+      }
+
+      function saveEdits(edits) {
+        try {
+          localStorage.setItem(STORAGE_EDITS, JSON.stringify(edits));
+          memoryEdits = null;
+        } catch {
+          memoryEdits = { ...edits };
+        }
+        updateAnimalCount();
+        renderGrid();
+      }
+
+      function isBaseAnimal(id) {
+        return BASE_ANIMALS.some((animal) => animal.id === id);
+      }
+
+      function applyEdits(animal) {
+        const edits = loadEdits()[animal.id];
+        if (!edits) return animal;
+        const merged = { ...animal, ...edits };
+        delete merged.editedAt;
+        return merged;
+      }
+
+      function findAnimalById(id) {
+        const base = BASE_ANIMALS.find((animal) => animal.id === id);
+        if (base) return applyEdits(base);
+        const approved = loadApproved().find((animal) => animal.id === id);
+        if (approved) return applyEdits(approved);
+        const pending = loadPending().find((animal) => animal.id === id);
+        return pending || null;
+      }
+
       function getAllAnimals() {
-        return [...BASE_ANIMALS, ...loadApproved()];
+        return [...BASE_ANIMALS.map(applyEdits), ...loadApproved().map(applyEdits)];
       }
 
       function slugify(text) {
@@ -4090,9 +4290,7 @@
         const totalWaiting = pendingCount + feedbackWaiting;
 
         reviewLink.textContent =
-          totalWaiting > 0
-            ? `Review submissions (${totalWaiting} waiting)`
-            : "Review submissions (Admin)";
+          totalWaiting > 0 ? `Admin (${totalWaiting} waiting)` : "Admin";
       }
 
       function hasEmoji(text) {
@@ -4104,7 +4302,8 @@
         }
       }
 
-      function validateSubmission(data) {
+      function validateSubmission(data, options = {}) {
+        const { editingId = null } = options;
         const errors = [];
         const combined = Object.values(data).join(" ").toLowerCase();
         const minDetailLength = 8;
@@ -4171,17 +4370,21 @@
         }
 
         const duplicate = getAllAnimals().some(
-          (animal) => animal.name.toLowerCase() === data.name.trim().toLowerCase()
+          (animal) =>
+            animal.name.toLowerCase() === data.name.trim().toLowerCase() &&
+            animal.id !== editingId
         );
         if (duplicate) {
           errors.push("That animal is already in the encyclopedia!");
         }
 
-        const pendingDuplicate = loadPending().some(
-          (entry) => entry.name.toLowerCase() === data.name.trim().toLowerCase()
-        );
-        if (pendingDuplicate) {
-          errors.push("That animal is already waiting for review.");
+        if (!editingId) {
+          const pendingDuplicate = loadPending().some(
+            (entry) => entry.name.toLowerCase() === data.name.trim().toLowerCase()
+          );
+          if (pendingDuplicate) {
+            errors.push("That animal is already waiting for review.");
+          }
         }
 
         return errors;
@@ -4200,6 +4403,199 @@
           extraFact: document.getElementById("add-extra-fact").value.trim(),
           author: document.getElementById("add-author").value.trim(),
         };
+      }
+
+      function clearEditFormErrors() {
+        editFormErrorBox.hidden = true;
+        editFormErrorBox.innerHTML = "";
+      }
+
+      function showEditFormErrors(errors) {
+        editFormErrorBox.hidden = false;
+        editFormErrorBox.innerHTML = `<strong>Please fix these before saving:</strong><ul>${errors
+          .map((error) => `<li>${escapeHtml(error)}</li>`)
+          .join("")}</ul>`;
+        editFormErrorBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      function getEditFormData() {
+        return {
+          name: document.getElementById("edit-name").value.trim(),
+          emoji: document.getElementById("edit-emoji").value.trim(),
+          type: document.getElementById("edit-type").value,
+          habitat: document.getElementById("edit-habitat").value,
+          livesIn: document.getElementById("edit-lives-in").value.trim(),
+          diet: document.getElementById("edit-diet").value.trim(),
+          size: document.getElementById("edit-size").value.trim(),
+          funFact: document.getElementById("edit-fun-fact").value.trim(),
+          extraFact: document.getElementById("edit-extra-fact").value.trim(),
+        };
+      }
+
+      function populateEditForm(animal) {
+        document.getElementById("edit-name").value = animal.name || "";
+        document.getElementById("edit-emoji").value = animal.emoji || "";
+        document.getElementById("edit-type").value = animal.type || "Mammal";
+        document.getElementById("edit-habitat").value = animal.habitat || "Forest";
+        document.getElementById("edit-lives-in").value = animal.livesIn || "";
+        document.getElementById("edit-diet").value = animal.diet || "";
+        document.getElementById("edit-size").value = animal.size || "";
+        document.getElementById("edit-fun-fact").value = animal.funFact || "";
+        document.getElementById("edit-extra-fact").value = animal.extraFact || "";
+        editAnimalLabel.textContent = `Editing ${animal.name}. Changes save on this device.`;
+      }
+
+      function showEditAnimalForm(animalId) {
+        if (!reviewUnlocked) {
+          alert("Enter the admin password first.");
+          return;
+        }
+
+        const animal = findAnimalById(animalId);
+        if (!animal) return;
+
+        editingAnimalId = animalId;
+        clearEditFormErrors();
+        populateEditForm(animal);
+        showScreen(editScreen);
+      }
+
+      function saveAnimalEdit(animalId, data) {
+        const fields = {
+          name: data.name,
+          emoji: data.emoji,
+          type: data.type,
+          habitat: data.habitat,
+          livesIn: data.livesIn,
+          diet: data.diet,
+          size: data.size,
+          funFact: data.funFact,
+          extraFact: data.extraFact,
+        };
+
+        if (isBaseAnimal(animalId)) {
+          const edits = loadEdits();
+          edits[animalId] = {
+            ...fields,
+            editedAt: new Date().toISOString(),
+          };
+          saveEdits(edits);
+          return;
+        }
+
+        const approvedIndex = loadApproved().findIndex((entry) => entry.id === animalId);
+        if (approvedIndex !== -1) {
+          const approved = loadApproved();
+          approved[approvedIndex] = {
+            ...approved[approvedIndex],
+            ...fields,
+            updatedAt: new Date().toISOString(),
+          };
+          saveApproved(approved);
+          return;
+        }
+
+        const pendingIndex = loadPending().findIndex((entry) => entry.id === animalId);
+        if (pendingIndex !== -1) {
+          const pending = loadPending();
+          pending[pendingIndex] = {
+            ...pending[pendingIndex],
+            ...fields,
+            updatedAt: new Date().toISOString(),
+          };
+          savePending(pending);
+        }
+      }
+
+      function handleEditSubmit(event) {
+        event.preventDefault();
+        clearEditFormErrors();
+
+        if (!reviewUnlocked || !editingAnimalId) {
+          alert("Admin access is required to edit animals.");
+          return;
+        }
+
+        try {
+          const data = getEditFormData();
+          const errors = validateSubmission(data, { editingId: editingAnimalId });
+          if (errors.length > 0) {
+            showEditFormErrors(errors);
+            return;
+          }
+
+          saveAnimalEdit(editingAnimalId, data);
+          editingAnimalId = null;
+          editAnimalForm.reset();
+          successMessageEl.textContent = `"${data.name}" was updated successfully.`;
+          renderReviewList();
+          showScreen(successScreen);
+        } catch (error) {
+          console.error(error);
+          showEditFormErrors(["Something went wrong while saving. Please try again."]);
+        }
+      }
+
+      function renderEditAnimalList() {
+        if (!reviewUnlocked) return;
+
+        const query = editAnimalSearchQuery.trim().toLowerCase();
+        const pending = loadPending();
+        const allEditable = [...getAllAnimals(), ...pending.filter((entry) => !getAllAnimals().some((a) => a.id === entry.id))];
+        const filtered = allEditable
+          .filter((animal) => {
+            if (!query) return true;
+            return (
+              animal.name.toLowerCase().includes(query) ||
+              animal.type.toLowerCase().includes(query) ||
+              animal.habitat.toLowerCase().includes(query)
+            );
+          })
+          .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+
+        const visible = filtered.slice(0, 40);
+        editAnimalList.innerHTML = "";
+
+        if (filtered.length === 0) {
+          editAnimalCount.textContent = query
+            ? `No animals match "${editAnimalSearchQuery}".`
+            : "No animals found.";
+          return;
+        }
+
+        editAnimalCount.textContent = query
+          ? `Showing ${visible.length} of ${filtered.length} match${filtered.length === 1 ? "" : "es"}`
+          : `Showing ${visible.length} of ${filtered.length} animals`;
+
+        visible.forEach((entry) => {
+          const item = document.createElement("article");
+          item.className = "review-item";
+          const statusLabel = entry.status === "pending"
+            ? " · waiting for review"
+            : entry.custom
+              ? " · user-added"
+              : loadEdits()[entry.id]
+                ? " · edited"
+                : "";
+          item.innerHTML = `
+            <div class="review-item-header">
+              <span class="review-item-emoji">${entry.emoji}</span>
+              <div>
+                <p class="review-item-name">${escapeHtml(entry.name)}</p>
+                <p class="review-meta">${escapeHtml(entry.type)} · ${escapeHtml(entry.habitat)}${statusLabel}</p>
+              </div>
+            </div>
+            <div class="review-actions">
+              <button type="button" class="edit-btn" data-id="${entry.id}">Edit</button>
+            </div>
+          `;
+
+          item.querySelector(".edit-btn").addEventListener("click", () => {
+            showEditAnimalForm(entry.id);
+          });
+
+          editAnimalList.appendChild(item);
+        });
       }
 
       function queueForManualReview(data) {
@@ -4446,9 +4842,14 @@
               <p><strong>Did you know?:</strong> ${escapeHtml(entry.extraFact)}</p>
             </div>
             <div class="review-actions">
+              <button type="button" class="edit-btn" data-id="${entry.id}">Edit</button>
               <button type="button" class="reject-btn" data-id="${entry.id}">Remove from site</button>
             </div>
           `;
+
+          item.querySelector(".edit-btn").addEventListener("click", () => {
+            showEditAnimalForm(entry.id);
+          });
 
           item.querySelector(".reject-btn").addEventListener("click", () => {
             removeApprovedAnimal(entry.id);
@@ -4557,10 +4958,15 @@
               <p><strong>How big:</strong> ${entry.size}</p>
             </div>
             <div class="review-actions">
+              <button type="button" class="edit-btn" data-id="${entry.id}">Edit</button>
               <button type="button" class="approve-btn" data-id="${entry.id}">Approve</button>
               <button type="button" class="reject-btn" data-id="${entry.id}">Reject</button>
             </div>
           `;
+
+            item.querySelector(".edit-btn").addEventListener("click", () => {
+              showEditAnimalForm(entry.id);
+            });
 
             item.querySelector(".approve-btn").addEventListener("click", () => {
               approveSubmission(entry.id);
@@ -4575,6 +4981,7 @@
 
         renderApprovedList();
         renderFeedbackList();
+        renderEditAnimalList();
       }
 
       function unlockReview() {
@@ -4702,7 +5109,17 @@
 
       function showReviewScreen() {
         reviewUnlocked = false;
+        editingAnimalId = null;
+        editAnimalSearchQuery = "";
+        if (editAnimalSearchInput) editAnimalSearchInput.value = "";
         reviewPinInput.value = "";
+        renderReviewList();
+        showScreen(reviewScreen);
+      }
+
+      function showEditAdminScreen() {
+        clearEditFormErrors();
+        editingAnimalId = null;
         renderReviewList();
         showScreen(reviewScreen);
       }
@@ -4735,6 +5152,13 @@
       reviewUnlockBtn.addEventListener("click", unlockReview);
       reviewPinInput.addEventListener("keydown", (event) => {
         if (event.key === "Enter") unlockReview();
+      });
+      editAnimalForm.addEventListener("submit", handleEditSubmit);
+      editBackBtn.addEventListener("click", showEditAdminScreen);
+      editCancelBtn.addEventListener("click", showEditAdminScreen);
+      editAnimalSearchInput.addEventListener("input", (event) => {
+        editAnimalSearchQuery = event.target.value.trim();
+        renderEditAnimalList();
       });
 
       function detectActiveTranslateLang() {
