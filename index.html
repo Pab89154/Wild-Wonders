@@ -774,15 +774,6 @@
         margin-bottom: 0.35rem;
       }
 
-      .card-emoji .animal-icon-img {
-        display: block;
-        width: 3.25rem;
-        height: 3.25rem;
-        margin: 0 auto;
-        object-fit: contain;
-        image-rendering: -webkit-optimize-contrast;
-      }
-
       .card-name {
         font-weight: 700;
         font-size: 0.92rem;
@@ -894,25 +885,6 @@
         font-size: 5rem;
         line-height: 1;
         margin-bottom: 0.5rem;
-      }
-
-      .detail-emoji .animal-icon-img {
-        display: block;
-        width: min(16rem, 72vw);
-        height: min(16rem, 72vw);
-        max-width: 280px;
-        max-height: 280px;
-        margin: 0 auto;
-        object-fit: contain;
-        image-rendering: -webkit-optimize-contrast;
-      }
-
-      .review-item-emoji .animal-icon-img {
-        display: block;
-        width: 3rem;
-        height: 3rem;
-        object-fit: contain;
-        image-rendering: -webkit-optimize-contrast;
       }
 
       .detail-name {
@@ -7777,8 +7749,7 @@
         {
           id: "axolotl",
           name: "Axolotl",
-          emoji: "",
-          icon: "images/axolotl.png",
+          emoji: "🦎",
           type: "Amphibian",
           habitat: "Jungle",
           livesIn: "Lakes near Mexico City — originally",
@@ -7946,8 +7917,7 @@
         {
           id: "aardvark",
           name: "Aardvark",
-          emoji: "",
-          icon: "images/aardvark.png",
+          emoji: "🐾",
           type: "Mammal",
           habitat: "Grassland",
           livesIn: "Africa — savannas and grasslands",
@@ -11209,8 +11179,7 @@
         {
           id: "river-dolphin",
           name: "Amazon River Dolphin",
-          emoji: "",
-          icon: "images/river-dolphin.png",
+          emoji: "🐬",
           type: "Mammal",
           habitat: "Jungle",
           livesIn: "Murky rivers in the Amazon rainforest",
@@ -12155,7 +12124,7 @@
           errors.push("Please enter an animal name with at least 2 letters.");
         }
 
-        if (!hasEmoji(data.emoji) && !data.icon) {
+        if (!hasEmoji(data.emoji)) {
           errors.push("Please pick one emoji for your animal.");
         }
 
@@ -12298,7 +12267,6 @@
       }
 
       function saveAnimalEdit(animalId, data) {
-        const existing = findAnimalById(animalId);
         const fields = {
           name: data.name,
           emoji: data.emoji,
@@ -12315,9 +12283,6 @@
           dietFacts: data.dietFacts,
           sizeFacts: data.sizeFacts,
         };
-        if (existing?.icon) {
-          fields.icon = existing.icon;
-        }
 
         if (isBaseAnimal(animalId)) {
           const edits = loadEdits();
@@ -12423,7 +12388,7 @@
                 : "";
           item.innerHTML = `
             <div class="review-item-header">
-              <span class="review-item-emoji">${renderAnimalArt(entry, "review")}</span>
+              <span class="review-item-emoji">${entry.emoji}</span>
               <div>
                 <p class="review-item-name">${escapeHtml(entry.name)}</p>
                 <p class="review-meta">${escapeHtml(entry.type)} · ${escapeHtml(entry.habitat)}${statusLabel}</p>
@@ -12469,21 +12434,6 @@
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;")
           .replace(/"/g, "&quot;");
-      }
-
-      function renderAnimalArt(animal, size = "card") {
-        if (animal.icon) {
-          const sizes = { card: 38, detail: 80, review: 48 };
-          const px = sizes[size] || 38;
-          const cls =
-            size === "detail"
-              ? "animal-icon-img detail-animal-icon"
-              : size === "review"
-                ? "animal-icon-img review-animal-icon"
-                : "animal-icon-img card-animal-icon";
-          return `<img src="${escapeHtml(animal.icon)}" alt="${escapeHtml(animal.name)}" class="${cls}" width="${px}" height="${px}" loading="lazy" decoding="async">`;
-        }
-        return animal.emoji || "🐾";
       }
 
       function formatReviewFacts(entry, arrayKey, legacyKey) {
@@ -12694,7 +12644,7 @@
           item.className = "review-item";
           item.innerHTML = `
             <div class="review-item-header">
-              <span class="review-item-emoji">${renderAnimalArt(entry, "review")}</span>
+              <span class="review-item-emoji">${entry.emoji}</span>
               <div>
                 <p class="review-item-name">${escapeHtml(entry.name)}</p>
                 <p class="review-meta">${escapeHtml(entry.type)} · ${escapeHtml(entry.habitat)}${
@@ -12807,7 +12757,7 @@
             item.className = "review-item";
             item.innerHTML = `
             <div class="review-item-header">
-              <span class="review-item-emoji">${renderAnimalArt(entry, "review")}</span>
+              <span class="review-item-emoji">${entry.emoji}</span>
               <div>
                 <p class="review-item-name">${entry.name}</p>
                 <p class="review-meta">${entry.type} · ${entry.habitat}${
@@ -12924,7 +12874,7 @@
           card.className = "animal-card";
           card.dataset.animalId = animal.id;
           card.innerHTML = `
-            <div class="card-emoji">${renderAnimalArt(animal, "card")}</div>
+            <div class="card-emoji">${animal.emoji}</div>
             <p class="card-name">${animal.name}</p>
             <span class="habitat-badge ${habitatClass(animal.habitat)}">${animal.habitat}</span>
             ${animal.custom ? '<span class="custom-badge">Your addition</span>' : ""}
@@ -12942,7 +12892,7 @@
         const animal = getAllAnimals().find((a) => a.id === id);
         if (!animal) return;
 
-        document.getElementById("detail-emoji").innerHTML = renderAnimalArt(animal, "detail");
+        document.getElementById("detail-emoji").textContent = animal.emoji;
         document.getElementById("detail-name").textContent = animal.name;
         document.getElementById("detail-type").textContent = animal.custom
           ? `${animal.type} · Lives in ${animal.habitat} · Added by a kid!`
