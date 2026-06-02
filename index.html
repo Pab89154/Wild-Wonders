@@ -776,10 +776,11 @@
 
       .card-emoji .animal-icon-img {
         display: block;
-        width: 2.35rem;
-        height: 2.35rem;
+        width: 3.25rem;
+        height: 3.25rem;
         margin: 0 auto;
         object-fit: contain;
+        image-rendering: -webkit-optimize-contrast;
       }
 
       .card-name {
@@ -897,17 +898,21 @@
 
       .detail-emoji .animal-icon-img {
         display: block;
-        width: 5rem;
-        height: 5rem;
+        width: min(16rem, 72vw);
+        height: min(16rem, 72vw);
+        max-width: 280px;
+        max-height: 280px;
         margin: 0 auto;
         object-fit: contain;
+        image-rendering: -webkit-optimize-contrast;
       }
 
       .review-item-emoji .animal-icon-img {
         display: block;
-        width: 48px;
-        height: 48px;
+        width: 3rem;
+        height: 3rem;
         object-fit: contain;
+        image-rendering: -webkit-optimize-contrast;
       }
 
       .detail-name {
