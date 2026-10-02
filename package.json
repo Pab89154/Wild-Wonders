@@ -1,0 +1,8 @@
+{
+  "name": "wild-wonders",
+  "private": true,
+  "description": "Wild Wonders — animal encyclopedia for kids",
+  "scripts": {
+    "dev": "npx --yes serve . -l 5180"
+  }
+}
